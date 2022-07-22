@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "_Layout";
+
+}
+
+@using Extrade.ViewModels;
+@model PaginingViewModel<List<OrderViewModel>>
+
+
+@foreach (var p in Model.Data)
+{
+
+    <div   d-flex align-text-top">
+
+        <div class="card  border-3" style="width: 18rem;">
+
+            <div class="card-body">
+                <h5 class="card-title">Order Details</h5>
+
+               @* <img class="card-img-top" src="~/CSS/@p.TotalPrice" >*@
+
+              @*  <p class="card-text">@p.UserName  @p.UserNameAr</p>
+                <p class="card-text">@p.Country</p>
+                <p class="card-text">@p.City</p>
+                <p class="card-text">@p.Street</p>*@
+
+@*
+                <h2>@p.status.ToString()</h2>
+                <h2>@p.TotalPrice</h2>*@
+                  <a  asp-action="GetOne"  asp-controller="Order" asp-route-id = "@p.ID"  class="btn btn-blue">Remove</a>
+                <a href="/Home/Index" class="btn btn-blue">Go Home</a>
+                
+            </div>
+        </div>
+    </div>
+}
+
+

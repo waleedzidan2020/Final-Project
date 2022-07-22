@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Content\imges\**" />
+    <Content Remove="Content\imges\**" />
+    <EmbeddedResource Remove="Content\imges\**" />
+    <EntityDeploy Remove="Content\imges\**" />
+    <None Remove="Content\imges\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\extrade.Repositories\Extrade.Repositories.csproj" />
+    <ProjectReference Include="..\Extrade.ViewModels\Extrade.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Images\" />
+    <Folder Include="Content\Uploads\Category\" />
+    <Folder Include="Content\Uploads\Marketer\" />
+    <Folder Include="Content\Uploads\ProductImage\" />
+    <Folder Include="Content\Uploads\UserImage\" />
+    <Folder Include="Content\Uploads\Vendor\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Uploads\UserImage\" />
+  </ItemGroup>
+
+</Project>

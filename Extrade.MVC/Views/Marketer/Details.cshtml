@@ -1,0 +1,23 @@
+﻿@using Extrade.ViewModels
+
+
+@model List<MarketerViewModels>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Marketer Name</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var p in Model)
+    {
+      <tr>
+      <td>@p.UserID</td>
+      <td>@p.NameAr</td>
+      <td></td>
+      </tr>
+    }

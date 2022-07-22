@@ -1,0 +1,30 @@
+﻿@using Extrade.ViewModels;
+@using Extrade.ViewModels;
+@model PaginingViewModel<List<CategoryViewModel>>
+
+
+@{
+    Layout = "_Layout";
+}
+<div class=container1 >
+    @foreach (var p in Model.Data)
+{
+
+    <div class=" d-inline-block align-text-top">
+
+        <div class="card  border-3" style="width: 18rem;">
+
+            <div class="card-body">
+                <h5 class="card-title">Category Details</h5>
+
+                <img class="card-img-top" src="~@p.Image"/>
+               <h2> @p.NameAr</h2>
+               <h2> @p.NameEn</h2>
+
+                <a  asp-action="Update"  asp-controller="Category" asp-route-Id = "@p.CatID"  class="btn btn-blue">Edit</a>
+                <a  asp-action="Remove"  asp-controller="Category" asp-route-Id = "@p.CatID"  class="btn btn-blue">Remove</a>
+            </div>
+        </div>
+    </div>
+}
+</div>

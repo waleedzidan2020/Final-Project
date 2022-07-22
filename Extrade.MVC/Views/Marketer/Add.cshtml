@@ -1,0 +1,28 @@
+﻿@using Extrade.ViewModels
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model MarketerEditViewModel
+
+<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Marketer">
+
+   
+    
+   
+    <div class="form-group">
+       <label>UserId</label>
+       <input type="text" name="UserId" value="@ViewBag.id" hidden  readonly class="form-group" />
+   </div>
+   
+
+   <div class="form-group">
+    <label for="exampleFormControlFile1">Tax Card</label>
+    <input type="file" multiple="multiple" asp-for="ImageFile" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+
+
+    <div class="form-group">
+       <input type="submit" class="form-group"/>
+   </div>
+
+
+
+</form>

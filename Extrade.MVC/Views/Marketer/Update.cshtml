@@ -1,0 +1,33 @@
+﻿
+@using Extrade.ViewModels;
+@model MarketerEditViewModel
+
+
+
+<h1>Edit Marketer</h1>
+
+<form method="post" enctype="multipart/form-data" href="~/Marketer/Update">
+
+
+    
+
+   <div class="form-group">
+       <label>BrandNameAr</label>
+       <input name="BrandNameAr" type="text" class="form-group" value="@Model.TaxCard"/>
+   </div>
+    <div class="form-group">
+       <label>BrandNameEr</label>
+       <input name="BrandNameEr" type="text" class="form-group" value="@Model.Salary" />
+   </div>
+
+
+
+
+    <div class="form-group">
+       <input type="submit" class="form-group"/>
+   </div>
+
+
+
+</form>
+

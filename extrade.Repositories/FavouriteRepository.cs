@@ -1,0 +1,67 @@
+﻿using extrade.models;
+using Extrade.ViewModels;
+using LinqKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Extrade.Repositories
+{
+    public class FavouriteRepository : GeneralRepositories<Favourite>
+    {
+        public FavouriteRepository(ExtradeContext _DBContext) : base(_DBContext)
+        {
+        }
+
+        public PaginingViewModel<List<FavouriteViewModel>> GetFavourites(
+                        string UserID, 
+                        int ID = 0,
+                        string OrderBy = "",
+                        bool IsAscending = false,
+                        int PageIndex = 1,
+                        int PageSize = 20)
+        {
+            
+                var Filtering = PredicateBuilder.New<Favourite>();
+                var oldFiltering = Filtering;
+                if (ID > 0)
+                    Filtering = Filtering.Or(p => p.ID == ID);
+                if (oldFiltering == Filtering)
+                    Filtering = null;
+                var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, null);
+
+                var Result =
+                    query.Select(p => new FavouriteViewModel()
+                    {
+                        ID = p.ID,
+                        ProductID=p.ProductID,
+                        UserID=p.UserID
+                    }).Where(p=>p.UserID==UserID);
+
+                PaginingViewModel<List<FavouriteViewModel>>
+                    FinalResult = new PaginingViewModel<List<FavouriteViewModel>>()
+                    {
+                        PageIndex = PageIndex,
+                        PageSize = PageSize,
+                        Count = GetList().Count(),
+                        Data = Result.Where(p=>p.UserID==UserID).ToList(),
+                    };
+
+                return FinalResult;
+
+            
+        }
+        public new Favourite Add(Favourite obj) =>
+                base.Add(obj).Entity;
+
+        public Favourite Remove(int ID)
+        {
+            var filter = PredicateBuilder.New<Favourite>();
+            filter = filter.Or(p => p.ID == ID);
+            var result = base.GetbyID(filter);
+            return base.Remove(result).Entity;
+        }
+    }
+}

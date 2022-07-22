@@ -1,0 +1,30 @@
+﻿@using Extrade.ViewModels
+
+
+
+@{
+    Layout = "_Layout";
+
+}
+@model CategoryEditViewModel
+
+<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Category">
+
+   <div class="form-group">
+       <label>NameAr</label>
+       <input name="NameAr" type="text" class="form-group" />
+   </div>
+    <div class="form-group">
+       <label>NameEn</label>
+       <input name="NameEn" type="text" class="form-group" />
+   </div>
+
+   <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" asp-for="ImageFile" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+
+    <div class="form-group">
+       <input type="submit" class="form-group"/>
+   </div>
+</form>

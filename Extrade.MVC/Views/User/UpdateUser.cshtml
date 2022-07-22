@@ -1,0 +1,46 @@
+﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@using Extrade.ViewModels
+@model UserViewModel
+
+
+<form asp-action="edit" asp-controller="User" method="post" enctype="multipart/form-data">
+   <input type="text" hidden value="@Model.ID" name="ID"/>
+    <div>
+        <label for="NameEnglish">Name English : </label>
+        <input type="text" name="UserName" value="@Model.UserName" id="NameEnglish"/>
+    </div>
+    <br /><br />
+    <div>
+        <label for="NameAr">Name Arabic : </label>
+        <input type="text" name="NameAr" value="@Model.NameAr" id="NameAr"/>
+    </div><br /><br />
+    <div>
+        <label for="Password">Password : </label>
+        <input type="text" name="Password" value="@Model.Password" id="Password"/>
+    </div><br /><br />
+    <div>
+        <label for="Email">Email : </label>
+        <input type="text" name="Email" value="@Model.Email" id="Email"/>
+    </div><br /><br />
+    <div>
+        <label for="Country">Country : </label>
+        <input type="text" name="Country" value="@Model.Country" id="Country"/>
+    </div><br /><br />
+    <div>
+        <label for="City">City : </label>
+        <input type="text" name="City" value="@Model.City" id="City"/>
+    </div><br /><br />
+    <div>
+        <label for="Street">Street : </label>
+        <input type="text" name="Street" value="@Model.Street" id="Street"/>
+    </div><br /><br />
+    <div>
+        <label for="uploadedimg">Image : </label>
+        <input type="file" name="uploadedimg" value="@Model.Img" id="uploadedimg"/>
+    </div><br /><br />
+    <div>
+        <label for="Phone">Phone : </label>
+        <input type="text" name="Phones" value="@Model.Phones.FirstOrDefault()" id="Phone"/>
+    </div><br /><br />
+        <input type="submit" value="Update"/>
+</form>

@@ -1,0 +1,15 @@
+﻿@using Extrade.ViewModels
+
+@model RoleEditViewModel
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+
+
+<form asp-action="Add" asp-controller="Role" method="post">
+    
+    <div>
+        <label asp-for="Name">Role Name : </label>
+        <input asp-for="Name"/>
+        <span asp-validation-for="Name"></span>
+    </div><br /><br />
+        <input type="submit" value="Create"/>
+</form>

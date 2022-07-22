@@ -1,0 +1,116 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using extrade.models;
+@inject SignInManager<User> signin
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/nav.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container1">
+            <div class="content-nav">
+                <div class="logo-div">
+                    <a class="logo" href=""><img class="logo" src="/assests/e-trade.svg" alt="logo"></a>
+                </div>
+
+                <form class="searchform" action="">
+                    <input type="text" name="" placeholder="What are you looking for?" id="">
+                    <button type="button"><img src="/assests/icons8-search.svg" alt=""></button>
+                </form>
+                <div class="cart-fav">
+                    <div class="cart">
+                        <a href="#"><img src="/assests/shopping-cart.svg" alt=""></a>
+                    </div>
+                    <div class="cart">
+                        <a href="#"><img src="/assests/heart-plus.svg" alt=""></a>
+                    </div>
+                </div>
+                <div class="dropdown mt-3 ">
+                    <button class="btn d-flex justify-content-around  dropdown-toggle" type="button"
+                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="dropcontent">
+                            <img src="/assests/person-profile.svg" alt="">
+                            
+                            <p class="pt-1">@User.Identity.Name
+                            </p>
+                            
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/Category/Add"> <img class="icon" src="/assests/person-profile.svg"
+                                    alt=""> My Profile</a></li>
+                        <li><a class="dropdown-item" href="/Vendor/GetOne"><img class="icon" src="/assests/wallet-money.svg" alt="">
+                                My Wallet</a></li>
+                        <li><a class="dropdown-item" href="/Order/Get"><img class="icon" src="/assests/shopping-cart.svg"
+                                    alt=""> My Order</a></li>
+                        <li><a class="dropdown-item" href="/UseAsVendor/ChangePassword"><img class="icon" src="/assests/enter.svg" alt=""> Change
+                                Password</a></li>
+                        <li><a class="dropdown-item" href="/UseAsVendor/SignOut"><img class="icon" src="/assests/enter.svg" alt=""> Log
+                                Out</a></li>
+                       
+                    </ul>
+                </div>
+                <div class="notification"> <a class="" href=""><img src="/assests/notification.svg" alt=""></a> </div>
+
+            </div>
+
+
+
+        </div>
+
+    </nav>
+    <main >
+         
+        @RenderBody()
+     
+    </main>
+
+    <footer>
+            <div class="content-footer">
+                
+
+               
+            <div class="content-footer1">
+                <img class="l" src="/assests/e-trade.svg" alt="logo">
+                <div class="txt">
+                    <p>A merchant supports everyone who thinks to build his e-commerce with many services. Firstly, a
+                        platform that allows merchants to manage and follow up on orders, suggest and provide a wide
+                        range of products, shipping services for products, delivery to the final customer and collection
+                        from them, instant transfer of sales value to merchants, in addition to marketing consultations
+                        that help merchants sell their products through the Internet and suggest products that suit them
+                        and suit their target customers.</p>
+                </div>
+            </div>
+            <div class="content-footer2 mt-4">
+               <p class="h4">Follow us on social media :</p>
+               <div class="foorter-icon">
+                <a  href=""><img class="i" src="/assests/facebook-app.svg" alt=""></a>
+                <a  href=""><img class="i" src="/assests/twitter-app.svg" alt=""></a>
+                <a  href=""><img class="i" src="/assests/youtube-color.svg" alt=""></a>
+                <a  href=""><img class="i" src="/assests/linkedin-app.svg" alt=""></a>
+               </div>
+              <p class="h5 mt-5">All rights reserved to EXTRADE © 2022</p> 
+              
+             
+            </div>
+            </div>
+        
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

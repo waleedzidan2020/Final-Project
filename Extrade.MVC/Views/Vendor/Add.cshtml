@@ -1,0 +1,44 @@
+﻿
+
+@using Extrade.ViewModels
+
+@{
+    Layout = "_Layout";
+
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@model VendorEditViewModel
+
+
+<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Vendor">
+
+   <div class="form-group">
+       <label>BrandNameAr</label>
+       <input name="BrandNameAr" type="text" class="form-group" />
+   </div>
+    <div class="form-group">
+       <label>BrandNameEr</label>
+       <input name="BrandNameEr" type="text" class="form-group" />
+   </div>
+   
+    <div class="form-group">
+       <label>UserId</label>
+       <input type="text" name="UserId" value="@ViewBag.id"  readonly class="form-group" />
+   </div>
+   
+
+   <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" multiple="multiple" asp-for="ImageFile" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+
+
+    <div class="form-group">
+       <input type="submit" class="form-group"/>
+   </div>
+
+
+
+</form>

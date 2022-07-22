@@ -1,0 +1,19 @@
+﻿@using Extrade.ViewModels
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model UserLoginViewModel
+<form asp-action="SignIn" asp-controller="UseAsVendor" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <label asp-for="Email">Email :</label>
+    <input asp-for="Email" />
+    <br /><br />
+    <label asp-for="Password">Password :</label>
+    <input asp-for="Password"/>
+    <br /><br />
+    <label asp-for="RememberMe">Remember Me : </label>
+    <input asp-for="RememberMe"/>
+
+    <br /><br />
+
+    
+    <input type="submit" value="Sign In"/>
+</form>

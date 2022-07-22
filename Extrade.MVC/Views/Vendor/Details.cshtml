@@ -1,0 +1,35 @@
+﻿@using Extrade.ViewModels
+
+
+@{Layout="_Layout";}
+@model List<VendorViewModel>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Vendor Name</th>
+      <th scope="col">Brand Arabic</th>
+      <th scope="col">Brand English</th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var p in Model)
+    {
+         <tr>
+      <td>@p.UserID</td>
+      <td>@p.NameAr</td>
+      <td>@p.BrandNameAr</td>
+      
+                @foreach (var img in @p.VendorImage)
+                {
+                  <td>  <img src="@img" />  </td>
+
+                };
+
+    </tr>
+        
+    }
+   
+  </tbody>
+</table>
