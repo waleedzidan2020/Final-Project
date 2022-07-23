@@ -30,15 +30,15 @@ namespace Extrade.MVC
             UserRep = _UserRep;
             this.role = role;
         }
-        [Route("index")]
+        //[Route("index")]
         
-        [HttpGet("Name")]
-        public IActionResult index()
-        {
-            dynamic x = new ExpandoObject();
-            x.hi = "Hello World";
-            return new ObjectResult(x);
-        }
+        //[HttpGet("Name")]
+        //public IActionResult index()
+        //{
+        //    dynamic x = new ExpandoObject();
+        //    x.hi = "Hello World";
+        //    return new ObjectResult(x);
+        //}
      
         [Route("Mvc/AllUsers")]
         //[Authorize(Roles ="admin")]
@@ -68,11 +68,12 @@ namespace Extrade.MVC
                         PageIndex,
                         PageSize);
 
-            return View(query);
+            return View("AllUser",query);
         }
+        [Route("mvc/index")]
         public IActionResult Index()
         {
-            return null;
+            return View("Index");
         }
         [Route("SignInMvc")]
         [HttpGet]
@@ -114,33 +115,34 @@ namespace Extrade.MVC
             await UserRep.SignOut();
             return null;
         }
-        [Route("/Register")]
-        public IActionResult Register()
-        {
-            ViewBag.Roles = role.GetUserRole().Text;
-            return View();
-        }
-        [HttpPost]
-
-        public async Task<IActionResult> Create(UserControllersViewModel obj)
-        {
-            string Uploade = "/Content/Uploads/UserImage/";
-            IFormFile s = obj.uploadedimg;
-            string NewFileName = Guid.NewGuid().ToString() + s.FileName;
-            obj.Img = Uploade + NewFileName;
-            FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
-                ), FileMode.Create);
-            s.CopyTo(fs);
-            fs.Position = 0;
-            var result =
-            await UserRep.Add(obj);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("AllUsers");
-            }
-            else return View("Register");
-        }
+        //[Route("Register")]
+        //[HttpGet]
+        //public IActionResult Register()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //[Route("CreateUser")]
+        //public async Task<IActionResult> Create(UserControllersViewModel obj)
+        //{
+        //    string Uploade = "/Content/Uploads/UserImage/";
+        //    IFormFile s = obj.uploadedimg;
+        //    string NewFileName = Guid.NewGuid().ToString() + s.FileName;
+        //    obj.Img = Uploade + NewFileName;
+        //    FileStream fs = new FileStream(Path.Combine(
+        //        Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
+        //        ), FileMode.Create);
+        //    s.CopyTo(fs);
+        //    fs.Position = 0;
+        //    obj.Role = "User";
+        //    var result =
+        //    await UserRep.Add(obj);
+        //    if (result.Succeeded)
+        //    {
+        //        return RedirectToAction("AllUsers");
+        //    }
+        //    else return View("Register");
+        //}
         public APIViewModel Update(string ID)
         {
             var obj= UserRep.GetByID(ID);

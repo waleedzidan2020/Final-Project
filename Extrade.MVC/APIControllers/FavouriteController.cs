@@ -51,16 +51,16 @@ namespace Extrade.MVC.APIControllers
                 Data = null
             };
         }
-        public APIViewModel Remove(int ID)
-        {
-            FavRepo.Remove(ID);
-            unitOfWork.Submit();
-            return new APIViewModel
-            {
-                Success = true,
-                Massege = "",
-                Data = null
-            };
-        }
+        //public APIViewModel Remove(int ID)
+        //{
+        //    FavRepo.Remove(ID);
+        //    unitOfWork.Submit();
+        //    return new APIViewModel
+        //    {
+        //        Success = true,
+        //        Massege = "",
+        //        Data = null
+        //    };
+        //}
     }
 }
