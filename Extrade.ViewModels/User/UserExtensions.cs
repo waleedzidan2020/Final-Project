@@ -65,8 +65,6 @@ namespace Extrade.ViewModels
                 }).ToList(),
                 Img = obj.Img,
                 
-                
-               
             };
         public static UserControllersViewModel UserToEdit(this User obj) =>
             new UserControllersViewModel

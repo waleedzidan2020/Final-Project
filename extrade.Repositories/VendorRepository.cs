@@ -14,10 +14,12 @@ namespace Extrade.Repositories
     public class VendorRepository : GeneralRepositories<Vendor>
     {
         private readonly ProductRepository ProductRepo;
-        public VendorRepository(ExtradeContext _DBContext
+        private readonly UserRepository UserRepo;
+        public VendorRepository(UserRepository _userrepo,ExtradeContext _DBContext
             ,ProductRepository _ProductRepo
             ) : base(_DBContext) 
         {
+            UserRepo = _userrepo;
             ProductRepo = _ProductRepo;
         }
 
@@ -191,10 +193,44 @@ namespace Extrade.Repositories
 
 
 
-        public VendorViewModel Add(VendorEditViewModel model) {
-            Vendor ven = model.ToModel();
+        public async Task<Vendor> Add(UserVendorEditViewModel model) {
+
+            var user = new UserControllersViewModel
+            {
+                City = model.City,
+                Email = model.Email,
+                UserName = model.Email,
+                Country = model.Country,
+                Password = model.Password,
+                IsDeleted = model.IsDeleted,
+                NameAr = model.NameAr,
+                NameEn = model.NameEn,
+                Phones = model.Phones.ToList(),
+                Street = model.Street,
+                Role = model.Role
+            };
+            var how = await UserRepo.Add(user);
+            if (how.Succeeded)
+            {
+                
+                var userid = UserRepo.GetByEmails(model.Email).Id;
+                return base.Add(new Vendor
+                {
+                    UserID = userid,
+                    BrandNameAr = model.BrandNameAr,
+                    BrandNameEr = model.BrandNameEr,
+                    VendorImage = model.VendorImage.Select(p => new VendorImage
+                    {
+                        Image=p
+                        ,VendorID=userid
+                    }).ToList(),
+                }).Entity;
+            }
+            else
+                return new Vendor();
             
-            return base.Add(ven).Entity.ToViewModel();
+            
+             
         }
         public VendorViewModel AcceptVendor(string ID)
         {

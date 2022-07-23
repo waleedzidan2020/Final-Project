@@ -19,15 +19,17 @@ namespace Extrade.MVC
     {
         public static int Main()
         {
-            
+
             var builder = WebApplication.CreateBuilder();
+            //       builder.Services.Configure<IdentityOptions>(options =>
+            //options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             builder.Services.AddRazorPages();
-            builder.Services.AddDbContext<ExtradeContext>(i =>
+            builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
             {
-                i.UseLazyLoadingProxies().UseSqlServer
-                (builder.Configuration.GetConnectionString("Extrade"));
+                o.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,8 +45,15 @@ namespace Extrade.MVC
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTKey:Key"]))
                 };
             });
+
+            builder.Services.AddDbContext<ExtradeContext>(i =>
+            {
+                i.UseLazyLoadingProxies().UseSqlServer
+                (builder.Configuration.GetConnectionString("Extrade"));
+            });
+
             builder.Services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<ExtradeContext>();
+               .AddEntityFrameworkStores<ExtradeContext>();
             builder.Services.Configure<IdentityOptions>(p =>
             {
                 p.Password.RequiredLength = 6;
@@ -56,15 +65,7 @@ namespace Extrade.MVC
                 p.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 p.Lockout.MaxFailedAccessAttempts = 5;
             });
-            builder.Services.Configure<SignInOptions>(p =>
-            {
-                p.RequireConfirmedEmail = false;
-            });
-            builder.Services.ConfigureApplicationCookie(c =>
-            {
-                c.AccessDeniedPath = "/Home/index";
-                c.LoginPath = "/User/SignIn";
-            });
+
             builder.Services.AddScoped(typeof(UnitOfWork));
             builder.Services.AddScoped(typeof(UserRepository));
             builder.Services.AddScoped(typeof(ProductRepository));
@@ -76,13 +77,19 @@ namespace Extrade.MVC
             builder.Services.AddScoped(typeof(OrderDetailsRepositoty));
             builder.Services.AddScoped(typeof(RoleRepository));
             builder.Services.AddScoped(typeof(PaymentRepository));
-           
-            builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>,UserClaims>();
-            builder.Services.AddControllersWithViews().AddNewtonsoftJson(o=>
+
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaims>();
+
+            builder.Services.Configure<SignInOptions>(p =>
             {
-                o.SerializerSettings.Formatting=Newtonsoft.Json.Formatting.Indented;
-                o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                p.RequireConfirmedEmail = false;
             });
+            builder.Services.ConfigureApplicationCookie(c =>
+            {
+                c.AccessDeniedPath = "/Home/index";
+                c.LoginPath = "/User/SignIn";
+            });
+
             builder.Services.AddCors(i =>
             {
                 i.AddDefaultPolicy(b =>
@@ -95,7 +102,8 @@ namespace Extrade.MVC
             app.UseStaticFiles(
                 new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),                }
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+                }
                 );
             app.UseRouting();
             app.UseCors();
@@ -103,7 +111,7 @@ namespace Extrade.MVC
             app.UseAuthorization();
             app.UseSwagger();
             app.UseSwaggerUI();
-            
+
             app.MapDefaultControllerRoute();
             app.Run();
             return 0;

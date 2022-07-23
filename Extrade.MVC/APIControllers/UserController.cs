@@ -36,40 +36,40 @@ namespace Extrade.MVC.Controler
             x.hi = "Hello World";
             return new ObjectResult(x);
         }
-        [Route("AllUsers")]
-        //[Authorize(Roles ="admin")]
-        public IActionResult AllUsers(
-                        string? ID = null,
-                        string? NameEn = null,
-                        string? NameAr = null,
-                        string? Country = null,
-                        string? City = null,
-                        string? Street = null,
-                        bool? IsDeleted=null,
-                        string OrderBy = "",
-                        bool IsAscending = false,
-                        int PageIndex = 1,
-                        int PageSize = 20)
-        {
-            var query =
-                UserRep.Get(ID,
-                        NameEn,
-                        NameAr,
-                        Country,
-                        City,
-                        Street,
-                        IsDeleted,
-                        OrderBy,
-                        IsAscending,
-                        PageIndex,
-                        PageSize);
+        //[Route("AllUsers")]
+        ////[Authorize(Roles ="admin")]
+        //public IActionResult AllUsers(
+        //                string? ID = null,
+        //                string? NameEn = null,
+        //                string? NameAr = null,
+        //                string? Country = null,
+        //                string? City = null,
+        //                string? Street = null,
+        //                bool? IsDeleted=null,
+        //                string OrderBy = "",
+        //                bool IsAscending = false,
+        //                int PageIndex = 1,
+        //                int PageSize = 20)
+        //{
+        //    var query =
+        //        UserRep.Get(ID,
+        //                NameEn,
+        //                NameAr,
+        //                Country,
+        //                City,
+        //                Street,
+        //                IsDeleted,
+        //                OrderBy,
+        //                IsAscending,
+        //                PageIndex,
+        //                PageSize);
 
-            return View(query.Data);
-        }
-        public IActionResult Index()
-        {
-            return null;
-        }
+        //    return View(query.Data);
+        //}
+        //public IActionResult Index()
+        //{
+        //    return null;
+        //}
         //[HttpGet]
         //public APIViewModel SignIn(string? returnUrl)
         //{ 
@@ -172,7 +172,7 @@ namespace Extrade.MVC.Controler
         //    return null;
         //}
         [HttpPost]
-        [Route("User/Register")]
+        //[Route("User/Register")]
         public async Task<APIViewModel> Create([FromBody] UserControllersViewModel obj)
         {
             //string Uploade = "/Content/Uploads/UserImage/";

@@ -30,15 +30,15 @@ namespace Extrade.MVC
             UserRep = _UserRep;
             this.role = role;
         }
-        [Route("index")]
+        //[Route("index")]
         
-        [HttpGet("Name")]
-        public IActionResult index()
-        {
-            dynamic x = new ExpandoObject();
-            x.hi = "Hello World";
-            return new ObjectResult(x);
-        }
+        //[HttpGet("Name")]
+        //public IActionResult index()
+        //{
+        //    dynamic x = new ExpandoObject();
+        //    x.hi = "Hello World";
+        //    return new ObjectResult(x);
+        //}
      
         [Route("Mvc/AllUsers")]
         //[Authorize(Roles ="admin")]
@@ -70,9 +70,10 @@ namespace Extrade.MVC
 
             return View("AllUser",query);
         }
+        [Route("mvc/index")]
         public IActionResult Index()
         {
-            return null;
+            return View("Index");
         }
         [Route("SignInMvc")]
         [HttpGet]

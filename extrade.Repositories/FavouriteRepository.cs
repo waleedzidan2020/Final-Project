@@ -53,9 +53,19 @@ namespace Extrade.Repositories
 
             
         }
-        public new Favourite Add(Favourite obj) =>
-                base.Add(obj).Entity;
-
+        public new Favourite Add(Favourite obj) {
+            var query = base.GetList().Select(p => new Favourite
+            {
+                ProductID = obj.ProductID,
+                UserID = obj.UserID
+            }).Where(f => f.ProductID == obj.ProductID && f.UserID == obj.UserID);
+            if (query == null)
+            {
+                return base.Add(obj).Entity;
+            }
+            else
+                return base.Remove(obj).Entity;
+        }
         public Favourite Remove(int ID)
         {
             var filter = PredicateBuilder.New<Favourite>();

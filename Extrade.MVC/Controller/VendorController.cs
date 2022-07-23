@@ -48,22 +48,17 @@ namespace Extrade.MVC
             return View(res.Data);
         }
       
-        [Authorize(Roles = "Vendor")]
+        //[Authorize(Roles = "Vendor")]
         [HttpGet]
         public IActionResult Add(User modeluser) {
-            var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ViewBag.id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-          var data = repo.GetOne(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (data==null  ) 
-                return View();
-            else
-                return RedirectToAction("Get", "Category");
+            //var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+           return View();
         
         }
         //[Authorize(Roles = "vendor")]
         [HttpPost]
      
-        public IActionResult Add(VendorEditViewModel  model)
+        public async Task<IActionResult> Add(UserVendorEditViewModel  model)
         {
             string Uploade = "/Content/Uploads/Vendor/";
             model.VendorImage = new List<string>();
@@ -77,7 +72,8 @@ namespace Extrade.MVC
                 f.CopyTo(fs);
                 fs.Position = 0;
             }
-            repo.Add(model.ToModel());
+            model.Role = "Vendor";
+            var res = await repo.Add(model);
             unitOfWork.Submit();
 
             return RedirectToAction("Get", "Category");

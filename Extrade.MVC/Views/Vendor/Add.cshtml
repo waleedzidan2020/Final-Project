@@ -14,6 +14,44 @@
 
 <form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Vendor">
 
+    <div>
+        <label for="NameEnglish">Name English : </label>
+        <input type="text" name="NameEn" id="NameEnglish"/>
+    </div>
+    <br /><br />
+    <div>
+        <label for="NameAr">Name Arabic : </label>
+        <input type="text" name="NameAr" id="NameAr"/>
+    </div><br /><br />
+    <div>
+        <label for="Email">Email : </label>
+        <input type="text" name="Email" id="Email"/>
+    </div><br /><br />
+    <div>
+        <label for="PasswordHash">Password : </label>
+        <input type="text" name="Password" id="PasswordHash"/>
+    </div><br /><br />
+    <div>
+        <label for="Country">Country : </label>
+        <input type="text" name="Country" id="Country"/>
+    </div><br /><br />
+    <div>
+        <label for="City">City : </label>
+        <input type="text" name="City" id="City"/>
+    </div><br /><br />
+    <div>
+        <label for="Street">Street : </label>
+        <input type="text" name="Street" id="Street"/>
+    </div><br /><br />
+    <div>
+        <label for="uploadedimg">Image : </label>
+        <input type="file" name="uploadedimg" id="uploadedimg"/>
+    </div>
+    <br /><br />
+    <div>
+        <label for="Phones">Phone : </label>
+        <input type="text" name="Phones" id="Phones"/>
+    </div><br /><br />
    <div class="form-group">
        <label>BrandNameAr</label>
        <input name="BrandNameAr" type="text" class="form-group" />
@@ -21,11 +59,6 @@
     <div class="form-group">
        <label>BrandNameEr</label>
        <input name="BrandNameEr" type="text" class="form-group" />
-   </div>
-   
-    <div class="form-group">
-       <label>UserId</label>
-       <input type="text" name="UserId" value="@ViewBag.id"  readonly class="form-group" />
    </div>
    
 
