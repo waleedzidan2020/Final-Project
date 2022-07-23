@@ -78,14 +78,14 @@ namespace Extrade.MVC
 
 
             //    ), FileMode.Create);
-            model.TaxCard = "  ";
 
             //s.CopyTo(fs);
             //fs.Position = 0;
+            model.TaxCard = "  ";
 
             model.Role = "Marketer";
-            var res= await marketerRebository.Add(model);
-             unitOfWork.Submit();
+            var res=  marketerRebository.Add(model);
+            unitOfWork.Submit();
 
 
             return new ObjectResult(new {

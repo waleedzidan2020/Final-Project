@@ -184,7 +184,7 @@ namespace Extrade.MVC.Controler
             //    ), FileMode.Create);
             //s.CopyTo(fs);
             //fs.Position = 0;
-            obj.Role = role.GetUserRole().Text;
+            obj.Role = "User";
             var result=
             await UserRep.Add(obj);
             if (result.Succeeded)

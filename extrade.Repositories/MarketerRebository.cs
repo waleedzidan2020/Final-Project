@@ -120,9 +120,8 @@ namespace Extrade.Repositories
             };
             var how = await UserRepo.Add(user);
             
-            return  base.Add(new Marketer
+            return   base.Add(new Marketer
             {
-                
                 TaxCard = model.TaxCard,
 
             }).Entity;
