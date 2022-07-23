@@ -129,7 +129,7 @@ namespace Extrade.MVC
             }
             model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            model.Price *= 10 / 100;
+            model.Price *= 10f / 100f;
             model.CategoryID = 1;
             ProductRep.Add(model.ToModel());
             unitOfWork.Submit();

@@ -14,12 +14,12 @@ namespace Extrade.Repositories
     {
         public ProductRepository prodrep;
         public CollectionRepository Collrep;
-        public CollectionDetailsRepository(ExtradeContext _Contex)
+        public CollectionDetailsRepository(ExtradeContext _Contex ,CollectionRepository _collrep)
 
            : base(_Contex)
         {
             prodrep = new ProductRepository(_Contex);
-            Collrep = new CollectionRepository(_Contex);
+            Collrep = _collrep;
         }
         public PaginingViewModel<List<CollactionDetailsViewModel>> Get(int ProductID = 0,
              int CollectionID = 0, string Collection = "", string Product = "",

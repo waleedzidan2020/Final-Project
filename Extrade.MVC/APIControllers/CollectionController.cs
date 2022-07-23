@@ -2,6 +2,7 @@
 using Extrade.Repositories;
 using Extrade.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,12 +13,14 @@ namespace Extrade.MVC.Controler
 
 
         private CollectionRepository CollectionRepo;
+        private UserRepository UserRepo;
         private UnitOfWork UnitOfWork;
-        
-        public CollectionController(CollectionRepository _CollectionRepo,
-         UnitOfWork _UnitOfWork, UserRepository userrepo)
+        private UserManager<User> UserMan;
+        public CollectionController(UserManager<User> _Um,UserRepository _userrepo,CollectionRepository _CollectionRepo,
+         UnitOfWork _UnitOfWork)
         {
-          
+            UserMan = _Um;
+            UserRepo = _userrepo;
             CollectionRepo = _CollectionRepo;
             UnitOfWork = _UnitOfWork;
         }
@@ -44,11 +47,12 @@ namespace Extrade.MVC.Controler
 
 
         [Route("Api/GetCollection")]
-        [Authorize(Roles = "Marketer")]
-        public APIViewModel GetWhereMarketerID()
+        //[Authorize(Roles = "Marketer")]
+        [HttpGet]
+        public APIViewModel GetWhereMarketerID([FromHeader]string id)
         {
-            var ID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = CollectionRepo.GetWhereMarketerID(ID);
+           
+           var result = CollectionRepo.GetWhereMarketerID(id);
          return new APIViewModel
          {
              Success = true,
@@ -74,24 +78,40 @@ namespace Extrade.MVC.Controler
         {
             return null;
         }
-        [Authorize(Roles = "Marketer")]
+        //[Authorize(Roles = "Marketer")]
         [Route("Api/AddCollection")]
         [HttpPost]
         public APIViewModel Add([FromBody]CollectionEditViewModel model)
         {
-            Guid g= Guid.NewGuid();
-            model.Code= g.ToString().Substring(0,10);
-          
-            
-           CollectionRepo.Add(model);
-            UnitOfWork.Submit();
-            return new APIViewModel
+            var user = UserRepo.GetUserByID(model.MarketerID);
+            var check = UserMan.GetRolesAsync(user);
+            for (int i = 0; i < check.Result.Count; i++)
             {
-               
-                Massege = "Done Added",
-                Success = true,
-                Data = null,
-                url = "Api/GetCollection"
+                if (check.Result[i] == "Marketer") { 
+                Guid g = Guid.NewGuid();
+                model.Code = g.ToString().Substring(0, 10);
+                model.MarketerID = model.MarketerID;
+                CollectionRepo.Add(model);
+                //var all = CollectionRepo.GetWhereMarketerID(user.Id);
+                    UnitOfWork.Submit();
+                   
+                return new APIViewModel
+                {
+
+                    Massege = "Done Added",
+                    Success = true,
+                    Data = null,
+                    url = "Api/GetCollection"
+
+                };
+            }
+                else return new APIViewModel
+                {
+
+                };
+            };
+             return new APIViewModel
+            {
 
             };
         }

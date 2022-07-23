@@ -11,16 +11,17 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Data.Entity;
 using System.Linq;
 using X.PagedList;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Extrade.Repositories
 {
     public class CollectionRepository : GeneralRepositories<Collection>
     {
-
-        public CollectionRepository(ExtradeContext _Contex)
+        private readonly MarketerRebository markrepo;
+        public CollectionRepository(ExtradeContext _Contex,MarketerRebository _markrepo)
 
            : base(_Contex)
-        {}
+        { markrepo = _markrepo; }
         public PaginingViewModel<List<CollectionViewModel>> Get(string id,string NameAr = "", 
             string? NameEN = "", string Namepenroduct = "", 
             string Namearproduct = "",string Description="", float Price = 0,
@@ -84,13 +85,19 @@ namespace Extrade.Repositories
             var res = base.GetbyID(filter);
             return res.ToViewModel();
         }
-        public List<CollectionViewModel> GetWhereMarketerID(string ID)
+        [HttpPost]
+        public List<Collection> GetWhereMarketerID([FromBody]string ID)
         {
-            var query = base.GetList().Select(p => new CollectionViewModel
+            var marketer = markrepo.GetOneMarketer(ID);
+            var query = base.GetList().Select(p => new Collection
             {
+                ID=p.ID,
+
+                MarketerID = p.MarketerID,
                 NameEN = p.NameEN,
+                NameAr=p.NameAr,
                 Code = p.Code
-            }).Where(p => p.MarketerID == ID);
+            }).Where(p => p.MarketerID == marketer.UserID);
             return query.ToList();
         }
         public IPagedList<CollectionViewModel>Search(int pageindex = 1, int pagesize = 20)
