@@ -13,10 +13,11 @@ namespace Extrade.MVC.Controler
 
         private CollectionRepository CollectionRepo;
         private UnitOfWork UnitOfWork;
+        private UserRepository userrepo;
         public CollectionController(CollectionRepository _CollectionRepo,
-         UnitOfWork _UnitOfWork)
+         UnitOfWork _UnitOfWork, UserRepository userrepo)
         {
-
+            this.userrepo = userrepo;
             CollectionRepo = _CollectionRepo;
             UnitOfWork = _UnitOfWork;
         }
@@ -80,7 +81,8 @@ namespace Extrade.MVC.Controler
         {
             Guid g= Guid.NewGuid();
             model.Code= g.ToString().Substring(0,10);
-            model.MarketerID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+          
+            
            CollectionRepo.Add(model);
             UnitOfWork.Submit();
             return new APIViewModel
