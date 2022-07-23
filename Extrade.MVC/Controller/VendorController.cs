@@ -48,10 +48,11 @@ namespace Extrade.MVC
             return View(res.Data);
         }
       
-        //[Authorize(Roles = "Vendor")]
+        [Authorize(Roles = "Vendor")]
         [HttpGet]
         public IActionResult Add(User modeluser) {
-            ViewBag.id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.id = User.FindFirstValue(ClaimTypes.NameIdentifier);
           var data = repo.GetOne(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (data==null  ) 
                 return View();
