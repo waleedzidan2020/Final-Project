@@ -119,14 +119,19 @@ namespace Extrade.Repositories
                 Role=model.Role
             };
             var how = await UserRepo.Add(user);
-            
-            return   base.Add(new Marketer
+            if (how.Succeeded)
             {
-                TaxCard = model.TaxCard,
+                var userid = UserRepo.GetByEmails(model.Email).Id;
+                return base.Add(new Marketer
+                {
+                    UserID = userid,
+                    TaxCard = model.TaxCard,
 
-            }).Entity;
-            
-              
+                }).Entity;
+            }
+            else
+                return new Marketer();
+
              
 
         }

@@ -78,6 +78,7 @@ namespace Extrade.MVC
 
 
             //    ), FileMode.Create);
+           // model.TaxCard = "  ";
 
             //s.CopyTo(fs);
             //fs.Position = 0;

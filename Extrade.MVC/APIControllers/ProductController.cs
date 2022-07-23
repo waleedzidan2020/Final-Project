@@ -103,7 +103,7 @@ namespace Extrade.MVC.Controler
         }
 
         [HttpGet]
-        [Authorize("Vendor")]
+        [Authorize(Roles ="Vendor")]
         [Route("Mvc/AddProduct")]
         public IActionResult Add()
         {

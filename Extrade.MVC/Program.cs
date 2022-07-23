@@ -21,13 +21,27 @@ namespace Extrade.MVC
         {
             
             var builder = WebApplication.CreateBuilder();
-    //       builder.Services.Configure<IdentityOptions>(options =>
-    //options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             builder.Services.AddRazorPages();
             builder.Services.AddDbContext<ExtradeContext>(i =>
             {
                 i.UseLazyLoadingProxies().UseSqlServer
                 (builder.Configuration.GetConnectionString("Extrade"));
+            });
+            
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTKey:Key"]))
+                };
             });
             builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ExtradeContext>();
@@ -68,21 +82,6 @@ namespace Extrade.MVC
             {
                 o.SerializerSettings.Formatting=Newtonsoft.Json.Formatting.Indented;
                 o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTKey:Key"]))
-                };
             });
             builder.Services.AddCors(i =>
             {

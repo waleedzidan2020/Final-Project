@@ -163,7 +163,7 @@ namespace Extrade.Repositories
 
 
 
-            return await SignInManager.PasswordSignInAsync(obj.ChangeUserLoginToUser().Email,
+            return await SignInManager.PasswordSignInAsync(obj.Email,
                    obj.Password, obj.RememberMe
                    , true);
 
