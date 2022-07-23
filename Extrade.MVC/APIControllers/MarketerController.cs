@@ -61,27 +61,27 @@ namespace Extrade.MVC.Controler
 
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Marketer")]
-        public IActionResult Add(MarketerEditViewModel model)
-        {
-            string Uploade = "/Content/Uploads/Category/";
+        //[HttpPost]
+        //[Authorize(Roles = "Marketer")]
+        //public IActionResult Add(MarketerEditViewModel model)
+        //{
+        //    string Uploade = "/Content/Uploads/Category/";
 
-            IFormFile? s = model.ImageFile;
+        //    IFormFile? s = model.ImageFile;
 
 
-            string NewFileName = Guid.NewGuid().ToString() + s.FileName;
-            model.TaxCard = Uploade + NewFileName;
-            FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "Category", NewFileName
-                ), FileMode.Create);
-            s.CopyTo(fs);
-            fs.Position = 0;
-            marketerRebository.Add(model.ToModel());
-            unitOfWork.Submit();
-            return RedirectToAction("Get", "Collection");
+        //    string NewFileName = Guid.NewGuid().ToString() + s.FileName;
+        //    model.TaxCard = Uploade + NewFileName;
+        //    FileStream fs = new FileStream(Path.Combine(
+        //        Directory.GetCurrentDirectory(), "Content", "Uploads", "Category", NewFileName
+        //        ), FileMode.Create);
+        //    s.CopyTo(fs);
+        //    fs.Position = 0;
+        //    marketerRebository.Add(model.ToModel());
+        //    unitOfWork.Submit();
+        //    return RedirectToAction("Get", "Collection");
 
-        }
+        //}
 
         [HttpGet]
         public IActionResult Update(string id)

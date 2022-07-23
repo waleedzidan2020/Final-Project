@@ -61,7 +61,8 @@ namespace Extrade.MVC
 
         [HttpPost]
         //[Authorize(Roles = "Marketer")]
-        public  ObjectResult Add(UserMarketerEditViewModel model)
+        [Route("Api/AddMarketer")]
+        public async Task<ObjectResult> Add([FromBody]UserMarketerEditViewModel model)
         {
             //string Uploade = "/Content/Uploads/Category/";
 
@@ -77,20 +78,23 @@ namespace Extrade.MVC
 
 
             //    ), FileMode.Create);
+            model.TaxCard = "  ";
 
             //s.CopyTo(fs);
             //fs.Position = 0;
-            model.Role = role.GetMarketerRole().Text;
 
-           var res= marketerRebository.Add(model);
-            unitOfWork.Submit();
+            model.Role = "Marketer";
+            var res= await marketerRebository.Add(model);
+             unitOfWork.Submit();
 
-          return ObjectResult(){ 
-              Message="done",
-              data=res,
+
+            return new ObjectResult(new {
             
-            }
-
+            
+            
+            
+            
+            });
         }
 
         //[HttpGet]

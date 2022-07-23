@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LinqKit;
 using extrade.models;
 using Extrade.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Extrade.Repositories
 {
@@ -13,8 +14,12 @@ namespace Extrade.Repositories
     {
 
         public readonly UserRepository UserRepo;
-        public MarketerRebository(UserRepository _UserRepo,ExtradeContext _DBContext) : base(_DBContext)
+        public readonly UnitOfWork unit;
+        public readonly UserManager<User> UserMan;
+        public MarketerRebository(UserManager<User> _UserMan,UserRepository _UserRepo,ExtradeContext _DBContext,UnitOfWork _unit) : base(_DBContext)
         {
+            unit = _unit;
+            UserMan = _UserMan;
             UserRepo = _UserRepo;
         }
         public PaginingViewModel<List<MarketerViewModels>> Get( string _UserID = null, string _TaxCard = "",
@@ -97,31 +102,33 @@ namespace Extrade.Repositories
 
 
         }
-        public Marketer Add(UserMarketerEditViewModel model)
+        public async Task<Marketer> Add(UserMarketerEditViewModel model)
         {
-            var user=UserRepo.Add(new User
+            var user=new UserControllersViewModel
             {
                 City = model.City,
                 Email = model.Email,
                 UserName = model.Email,
                 Country = model.Country,
+                Password=model.Password,
                 IsDeleted = model.IsDeleted,
                 NameAr = model.NameAr,
                 NameEn = model.NameEn,
-                PhoneNumber = model.Phones.Select(p => new Phone
-                {
-                    Number = p
-                }).ToList(),
-                Street = model.Street
-            }).Entity;
+                Phones = model.Phones.ToList(),
+                Street = model.Street,
+                Role=model.Role
+            };
+            var how = await UserRepo.Add(user);
             
-            return base.Add(new Marketer
+            return  base.Add(new Marketer
             {
-                UserID=user.Id,
+                
                 TaxCard = model.TaxCard,
 
             }).Entity;
-
+            
+              
+             
 
         }
         public MarketerViewModels Update(MarketerEditViewModel model)

@@ -68,6 +68,25 @@ namespace Extrade.ViewModels
                 
                
             };
+        public static UserControllersViewModel UserToEdit(this User obj) =>
+            new UserControllersViewModel
+            {
+
+                NameEn = obj.NameEn,
+                NameAr = obj.NameAr,
+                Password = obj.PasswordHash,
+                UserName = obj.Email,
+                Email = obj.Email,
+                Country = obj.Country,
+                City = obj.City,
+                Street = obj.Street,
+                IsDeleted = obj.IsDeleted,
+                Phones = obj.PhoneNumber.Select(p => p.Number).ToList(),
+                Img = obj.Img,
+                
+
+
+            };
 
     }
 
