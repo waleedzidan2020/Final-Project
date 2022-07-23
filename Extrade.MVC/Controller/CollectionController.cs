@@ -43,13 +43,13 @@ namespace Extrade.MVC
 
 
         
-        [HttpPost]
-        public IActionResult Add(CollectionEditViewModel model)
-        {
-            CollectionRepo.Add(model);
-            UnitOfWork.Submit();
-            return RedirectToAction("Search");
-        }
+        //[HttpPost]
+        //public IActionResult Add(CollectionEditViewModel model)
+        //{
+        //    CollectionRepo.Add(model);
+        //    UnitOfWork.Submit();
+        //    return RedirectToAction("Search");
+        //}
 
 
         [HttpGet]

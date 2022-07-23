@@ -80,8 +80,8 @@ namespace Extrade.MVC.Controler
         {
             Guid g= Guid.NewGuid();
             model.Code= g.ToString().Substring(0,10);
-            //model.MarketerID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            CollectionRepo.Add(model);
+            model.MarketerID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+           CollectionRepo.Add(model);
             UnitOfWork.Submit();
             return new APIViewModel
             {
