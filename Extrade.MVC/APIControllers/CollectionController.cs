@@ -48,10 +48,11 @@ namespace Extrade.MVC.Controler
 
         [Route("Api/GetCollection")]
         //[Authorize(Roles = "Marketer")]
-        public APIViewModel GetWhereMarketerID()
+        [HttpGet]
+        public APIViewModel GetWhereMarketerID([FromHeader]string id)
         {
-            var ID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = CollectionRepo.GetWhereMarketerID(ID);
+           
+           var result = CollectionRepo.GetWhereMarketerID(id);
          return new APIViewModel
          {
              Success = true,
@@ -91,7 +92,9 @@ namespace Extrade.MVC.Controler
                 model.Code = g.ToString().Substring(0, 10);
                 model.MarketerID = model.MarketerID;
                 CollectionRepo.Add(model);
-                UnitOfWork.Submit();
+                //var all = CollectionRepo.GetWhereMarketerID(user.Id);
+                    UnitOfWork.Submit();
+                   
                 return new APIViewModel
                 {
 

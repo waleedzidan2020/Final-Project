@@ -5,23 +5,52 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Extrade.MVC.Controler
+namespace Extrade.MVC
 {
-    public class ProductController : ControllerBase
+    public class ProductController : Controller
     {
         private readonly ProductRepository ProductRep;
         private readonly UnitOfWork unitOfWork;
+
+
         public ProductController(ProductRepository ProductRep, UnitOfWork unitOfWork)
         {
             this.ProductRep= ProductRep;
             this.unitOfWork = unitOfWork;
         }
-       
+        [Authorize("Admin"),Authorize("Vendor")]
+        [Route("ProductMvc/Get")]
+        public IActionResult Get(
+                        int ID = 0,
+                        string? NameEn = null,
+                        string? NameAr = null,
+                        float Price = 0,
+                        string? CategoryName = null,
+                        DateTime? ModifiedDate = null,
+                        string OrderBy = "",
+                        bool IsAscending = false,
+                        int PageIndex = 1,
+                        int PageSize = 20)
+        {
+            var query = 
+                ProductRep.GetProduct( ID,
+                         NameEn ,
+                         NameAr,
+                        Price,
+                        CategoryName,
+                        ModifiedDate,
+                        OrderBy,
+                        IsAscending,
+                        PageIndex ,
+                        PageSize );
+
+            return View("Get",query.Data);
+        }
         [Authorize(Roles ="User")]
         [Route("Api/Getproduct")]
         [HttpGet]
         public APIViewModel GetForUsers(
-                        int categoryID=1,
+                        
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -34,7 +63,6 @@ namespace Extrade.MVC.Controler
         {
             var query =
                 ProductRep.GetProductForUsers(
-                        categoryID,
                          NameEn,
                          NameAr,
                         Price,
@@ -52,29 +80,23 @@ namespace Extrade.MVC.Controler
                 Data = query
             };
         }
-        [HttpGet]
-        public APIViewModel GetProductWithCollection(List<CollectionDetalisEditViewModel> CollectionDetailsCode)
-        {
-            List<int> prodid = new List<int>();
-            foreach(var i in CollectionDetailsCode) {
-                prodid.Add(i.ProductID);
-            }
-            var result = ProductRep.GetProductForCollection(prodid);
-            for(var x = 0; x < CollectionDetailsCode.Count; x++) { 
-                foreach(var i in result)
-                {
-                    i.CollectionID = CollectionDetailsCode[x].CollectionID;
-                }
+        //[HttpGet]
+        //public APIViewModel GetProductWithCollection(string CollectionCode)
+        //{
+        //    var result = ProductRep.GetProductForCollection();
+        //    var final= result.Select(p => new ProductViewModel
+        //    {
+        //        CollectionCode = CollectionCode,
+        //    });
 
-            }
-            return new APIViewModel
-            {
-                Data = result,
-                Massege = "",
-                Success = true,
-                url = ""
-            };
-        }
+        //    return new APIViewModel
+        //    {
+        //        Data = final,
+        //        Massege = "",
+        //        Success = true,
+        //        url = ""
+        //    };
+        //}
         [Route("Mvc/SearchProudct")]
         public IActionResult Search(int PageIndex,int PageSize)  /////// pagination for product in mvc
         {
@@ -84,12 +106,13 @@ namespace Extrade.MVC.Controler
 
         [HttpGet]
         [Authorize(Roles ="Vendor")]
-        [Route("Mvc/AddProduct")]
+     
         public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Vendor")]
         public IActionResult Add(ProductEditViewModel model)
         {
             string Upload = "/Content/Uploads/ProductImage/";
@@ -105,7 +128,9 @@ namespace Extrade.MVC.Controler
                 fs.Position = 0;
             }
             model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            model.Price *= 10 / 100;
+
+            model.Price *= 10f / 100f;
+            model.CategoryID = 1;
             ProductRep.Add(model.ToModel());
             unitOfWork.Submit();
             return RedirectToAction("");
@@ -153,26 +178,16 @@ namespace Extrade.MVC.Controler
         }
         public IActionResult AcceptProduct(int ID)
         {
-            ProductRep.ProductStatus(ID);
+            ProductRep.AcceptProduct(ID);
             unitOfWork.Submit();
             return RedirectToAction();
         }
-        //public IActionResult RejectProduct(int ID)
-        //{
-        //    ProductRep.RejectProduct(ID);
-        //    unitOfWork.Submit();
-        //    return null;
-        //}
-        //    return new APIViewModel
-        //    {
-        //        Data = final,
-        //        Massege = "",
-        //        Success = true,
-        //        url = ""
-        //    };
-        //}
-       
-       
+        public IActionResult RejectProduct(int ID)
+        {
+            ProductRep.RejectProduct(ID);
+            unitOfWork.Submit();
+            return null;
+        }
         
     }
 }

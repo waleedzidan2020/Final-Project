@@ -102,6 +102,36 @@ namespace Extrade.Repositories
 
 
         }
+
+
+
+        public Marketer GetOneMarketer(string _id = "")
+        {
+
+            var filterd = PredicateBuilder.New<Marketer>();
+
+
+            var old = filterd;
+
+            if (!string.IsNullOrEmpty(_id))
+                filterd = filterd.Or(p => p.UserID == _id);
+
+
+            if (old == filterd)
+                filterd = null;
+
+
+            var query = base.GetByID(filterd);
+
+            if (query != null)
+                return query;
+            else
+                return null;
+
+
+
+
+        }
         public async Task<Marketer> Add(UserMarketerEditViewModel model)
         {
             var user=new UserControllersViewModel
