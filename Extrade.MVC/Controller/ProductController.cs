@@ -46,11 +46,8 @@ namespace Extrade.MVC
 
             return View("Get",query.Data);
         }
-        [Authorize(Roles ="User")]
-        [Route("Api/Getproduct")]
-        [HttpGet]
-        public APIViewModel GetForUsers(
-                        
+        public IActionResult VendorGet(
+                        string ID =null,
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -61,8 +58,9 @@ namespace Extrade.MVC
                         int PageIndex = 1,
                         int PageSize = 20)
         {
+            ID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var query =
-                ProductRep.GetProductForUsers(
+                ProductRep.GetProductForVendor(ID,
                          NameEn,
                          NameAr,
                         Price,
@@ -73,18 +71,48 @@ namespace Extrade.MVC
                         PageIndex,
                         PageSize);
 
-            return new APIViewModel
-            {
-                Success = true,
-                Massege = "",
-                Data = query
-            };
+            return View("VendorGet", query.Data);
         }
+        //[Authorize(Roles ="User")]
+        //[Route("Api/Getproduct")]
+        //[HttpGet]
+        //public APIViewModel GetForUsers(
+        //                int CategoryID = 1,
+        //                string? NameEn = null,
+        //                string? NameAr = null,
+        //                float Price = 0,
+        //                string? CategoryName = null,
+        //                DateTime? ModifiedDate = null,
+        //                string OrderBy = "",
+        //                bool IsAscending = false,
+        //                int PageIndex = 1,
+        //                int PageSize = 20)
+        //{
+        //    var query =
+        //        ProductRep.GetProductForUsers(
+        //            CategoryID,
+        //                 NameEn,
+        //                 NameAr,
+        //                Price,
+        //                CategoryName,
+        //                ModifiedDate,
+        //                OrderBy,
+        //                IsAscending,
+        //                PageIndex,
+        //                PageSize);
+
+        //    return new APIViewModel
+        //    {
+        //        Success = true,
+        //        Massege = "",
+        //        Data = query
+        //    };
+        //}
         //[HttpGet]
         //public APIViewModel GetProductWithCollection(string CollectionCode)
         //{
         //    var result = ProductRep.GetProductForCollection();
-        //    var final= result.Select(p => new ProductViewModel
+        //    var final = result.Select(p => new ProductViewModel
         //    {
         //        CollectionCode = CollectionCode,
         //    });
@@ -109,7 +137,7 @@ namespace Extrade.MVC
      
         public IActionResult Add()
         {
-            return View();
+            return View("VendorAdd");
         }
         [HttpPost]
         [Authorize(Roles = "Vendor")]
@@ -128,12 +156,11 @@ namespace Extrade.MVC
                 fs.Position = 0;
             }
             model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             model.Price *= 10f / 100f;
             model.CategoryID = 1;
             ProductRep.Add(model.ToModel());
             unitOfWork.Submit();
-            return RedirectToAction("");
+            return RedirectToAction("VendorGet");
         }
         [HttpGet]
         public APIViewModel Update(int id)
@@ -178,16 +205,16 @@ namespace Extrade.MVC
         }
         public IActionResult AcceptProduct(int ID)
         {
-            ProductRep.AcceptProduct(ID);
+            ProductRep.ProductStatus(ID);
             unitOfWork.Submit();
             return RedirectToAction();
         }
-        public IActionResult RejectProduct(int ID)
-        {
-            ProductRep.RejectProduct(ID);
-            unitOfWork.Submit();
-            return null;
-        }
-        
+        //public IActionResult RejectProduct(int ID)
+        //{
+        //    ProductRep.RejectProduct(ID);
+        //    unitOfWork.Submit();
+        //    return null;
+        //}
+       
     }
 }

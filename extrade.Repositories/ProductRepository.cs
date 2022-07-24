@@ -69,6 +69,60 @@ namespace Extrade.Repositories
             return FinalResult;
 
         }
+        public PaginingViewModel<List<ProductViewModel>> GetProductForVendor(
+                        string? ID,
+                        string? NameEn = null,
+                        string? NameAr = null,
+                        float Price = 0,
+                        string? CategoryName = null,
+                        DateTime? ModifiedDate = null,
+                        string OrderBy = "",
+                        bool IsAscending = false,
+                        int PageIndex = 1,
+                        int PageSize = 20
+                        )
+        {
+            var Filtering = PredicateBuilder.New<Product>();
+            var oldFiltering = Filtering;
+            
+            if (!string.IsNullOrEmpty(NameEn))
+                Filtering = Filtering.Or(p => p.NameEn.Contains(NameEn));
+            if (!string.IsNullOrEmpty(NameAr))
+                Filtering = Filtering.Or(p => p.NameAr.Contains(NameAr));
+            if (Price > 0)
+                Filtering = Filtering.Or(p => p.Price == Price);
+            if (CategoryName != null)
+                Filtering = Filtering.Or(p => p.Category.NameEn.Contains(CategoryName));
+            if (ModifiedDate != null)
+                Filtering = Filtering.Or(p => p.ModifiedDate <= ModifiedDate.Value);
+            if (oldFiltering == Filtering)
+                Filtering = null;
+            var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, null);
+
+            var Result =
+                query.Select(p => new ProductViewModel()
+                {
+                    ID = p.ID,
+                    NameEn = p.NameEn,
+                    NameAr = p.NameAr,
+                    Description = p.Description,
+                    Category = p.Category.NameEn,
+                    VendorName = p.Vendor.User.NameEn,
+                    Rating = p.Ratings.Select(p => p.Value).Average()
+                }).Where(p=>p.VendorID==ID&&p.Status==extrade.models.ProductStatus.accepted);
+
+            PaginingViewModel<List<ProductViewModel>>
+                FinalResult = new PaginingViewModel<List<ProductViewModel>>()
+                {
+                    PageIndex = PageIndex,
+                    PageSize = PageSize,
+                    Count = GetList().Count(),
+                    Data = Result.ToList(),
+                };
+
+            return FinalResult;
+
+        }
         public PaginingViewModel<List<ProductViewModel>> GetProductForUsers(
                         int categoryID,
                         string? NameEn = null,
@@ -108,7 +162,7 @@ namespace Extrade.Repositories
                     Description = p.Description,
                     Category = (p.Category != null)?p.Category.NameEn:"not provided",
                     VendorName = (p.Vendor != null)?p.Vendor.User.NameEn : "not provided",
-                    Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average()
+                    Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average():0
                 }).Where(p => p.Status == extrade.models.ProductStatus.accepted 
                 && p.IsDeleted == false && p.Quantity>0 && p.CategoryID==categoryID);
 

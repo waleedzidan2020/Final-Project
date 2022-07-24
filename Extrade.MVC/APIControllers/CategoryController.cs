@@ -122,8 +122,6 @@ namespace Extrade.MVC.Controler
             IFormFile s = model.ImageFile;
             string NewFileName = Guid.NewGuid().ToString() + s.FileName;
             model.Image = Uploade + NewFileName;
-
-
             FileStream fs = new FileStream(Path.Combine(
                 Directory.GetCurrentDirectory(), "Content", "Uploads", "Category", NewFileName
 

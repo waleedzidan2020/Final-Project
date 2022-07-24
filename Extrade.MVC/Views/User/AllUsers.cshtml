@@ -3,25 +3,43 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model PaginingViewModel<List<UserViewModel>>
 @{
-    Layout = "_Layout"; 
+    Layout = "_AdminLayout"; 
 }
-<table class="table" >
-  <thead class="thead-dark">
-    <tr>
-      
-      <th scope="col">NameEn</th>
-      <th scope="col">NameAr</th>
-      <th scope="col">E-Mail</th>
-      <th scope="col">Country</th>
-      <th scope="col">Phone</th>
-      <th scope="col">IsDeleted</th>
-      <th scope="col">Edit</th>
-      <th scope="col">RoleAdmin</th>
 
-    </tr>
-  </thead>
-  <tbody>
-        @foreach(var user in Model.Data){
+  <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                DataTable Example
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                              <th scope="col">NameEn</th>
+                                              <th scope="col">NameAr</th>
+                                              <th scope="col">E-Mail</th>
+                                              <th scope="col">Country</th>
+                                              <th scope="col">Phone</th>
+                                              <th scope="col">IsDeleted</th>
+                                              <th scope="col">Edit</th>
+                                              <th scope="col">RoleAdmin</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">NameEn</th>
+                                              <th scope="col">NameAr</th>
+                                              <th scope="col">E-Mail</th>
+                                              <th scope="col">Country</th>
+                                              <th scope="col">Phone</th>
+                                              <th scope="col">IsDeleted</th>
+                                              <th scope="col">Edit</th>
+                                              <th scope="col">RoleAdmin</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+      @foreach(var user in Model.Data){
     <tr>
       
       <td>@user.NameEn</td>
@@ -48,5 +66,10 @@
                 <td><a asp-action="UpdateRole" asp-controller="User" asp-route-Id=@user.ID>Role</a></td>
     </tr>
     }
-  </tbody>
-</table>
+    
+
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>

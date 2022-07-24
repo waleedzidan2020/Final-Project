@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
+
 namespace Extrade.MVC
 {
     public class VendorController : Controller
@@ -16,7 +17,7 @@ namespace Extrade.MVC
         UserRepository userRepository;
 
         public VendorController(VendorRepository repo, UnitOfWork unitOfWork, UserRepository userRepository)
-          { 
+        {
             this.repo = repo;
             this.unitOfWork = unitOfWork;
             this.userRepository = userRepository;
@@ -24,41 +25,45 @@ namespace Extrade.MVC
 
 
         }
-        public APIViewModel GetOne(string? _id = null) 
+        public APIViewModel GetOne(string? _id = null)
         {
-            var  data =   repo.GetOne(_id);
+            var data = repo.GetOne(_id);
             return new APIViewModel
             {
                 Data = data,
                 Massege = "",
-                Success=true
+                Success = true
             };
         }
         [Route("Mvc/AllVendors")]
 
-        [Authorize(Roles  = "Admin")]
-        public ViewResult GetList(string _id = null, string _BrandNameAr = "", string _BrandNameEn = "", string _NameProductAr = "", string _NameProductEn = "",bool IsDeleted=false, string orderby = null, bool IsAsceding = false, int pageindex = 1, int pagesize = 20)
-       
+        //[Authorize(Roles = "Admin")]
+        public ViewResult GetList(string _id = null, string _BrandNameAr = "", string _BrandNameEn = "", string _NameProductAr = "", string _NameProductEn = "", bool IsDeleted = false, string orderby = null, bool IsAsceding = false, int pageindex = 1, int pagesize = 20)
+
         {
 
-            var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn,IsDeleted, orderby , IsAsceding, pageindex, pagesize);
+            var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn, IsDeleted, orderby, IsAsceding, pageindex, pagesize);
 
 
 
             return View(res.Data);
         }
-      
-        //[Authorize(Roles = "Vendor")]
+        [Authorize(Roles = "Vendor")]
         [HttpGet]
-        public IActionResult Add(User modeluser) {
-            //var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
-           return View();
-        
+        public IActionResult Add(User modeluser)
+        {
+            ViewBag.id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var data = repo.GetOne(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (data == null)
+                return View();
+            else
+                return RedirectToAction("Get", "Category");
+
         }
-        //[Authorize(Roles = "vendor")]
+
         [HttpPost]
-     
-        public async Task<IActionResult> Add(UserVendorEditViewModel  model)
+        [Authorize(Roles = "Vendor")]
+        public IActionResult Add(VendorEditViewModel model)
         {
             string Uploade = "/Content/Uploads/Vendor/";
             model.VendorImage = new List<string>();
@@ -67,13 +72,12 @@ namespace Extrade.MVC
                 string NewFileName = Guid.NewGuid().ToString() + f.FileName;
                 model.VendorImage.Add(Uploade + NewFileName);
                 FileStream fs = new FileStream(Path.Combine(
-               Directory.GetCurrentDirectory(), "Content", "Uploads", "Vendor",NewFileName
+               Directory.GetCurrentDirectory(), "Content", "Uploads", "Vendor", NewFileName
                ), FileMode.Create);
                 f.CopyTo(fs);
                 fs.Position = 0;
             }
-            model.Role = "Vendor";
-            var res = await repo.Add(model);
+            repo.Add(model.ToModel());
             unitOfWork.Submit();
 
             return RedirectToAction("Get", "Category");
@@ -87,14 +91,14 @@ namespace Extrade.MVC
             var res = repo.GetOne(id);
             return View(res.ToEditViewModel());
         }
-      
+
 
 
 
 
 
         [HttpPost]
-      
+
         public IActionResult Update(VendorEditViewModel model)
         {
 
@@ -140,18 +144,18 @@ namespace Extrade.MVC
 
         }
 
-        public IActionResult Details(string _id = "", string _BrandNameAr = "", string _BrandNameEn = "",bool IsDeleted=false, string _NameProductAr = "", string _NameProductEn = "", string orderby = null, bool IsAsceding = false, int pageindex = 1, int pagesize = 20)
+        public IActionResult Details(string _id = "", string _BrandNameAr = "", string _BrandNameEn = "", bool IsDeleted = false, string _NameProductAr = "", string _NameProductEn = "", string orderby = null, bool IsAsceding = false, int pageindex = 1, int pagesize = 20)
         {
 
 
-            var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn,  IsDeleted, orderby, IsAsceding, pageindex, pagesize);
+            var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn, IsDeleted, orderby, IsAsceding, pageindex, pagesize);
 
 
 
             return View(res.Data);
 
 
-            
+
 
 
         }
@@ -163,7 +167,7 @@ namespace Extrade.MVC
         }
         public IActionResult RejectVendor(string ID)
         {
-            
+
             repo.RejectVendor(ID);
             unitOfWork.Submit();
             return null;
@@ -172,5 +176,5 @@ namespace Extrade.MVC
     }
 
 
-   
+
 }

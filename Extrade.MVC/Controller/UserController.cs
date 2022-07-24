@@ -20,26 +20,24 @@ namespace Extrade.MVC
         public readonly UnitOfWork unit;
         public readonly UserRepository UserRep;
         public readonly RoleRepository role;
-        public readonly UserManager<User> _userManager;
 
-        public UserController(UserRepository _UserRep,UnitOfWork _unit, ExtradeContext Context, RoleRepository role, UserManager<User> _userManager)
+        public UserController(UserRepository _UserRep, UnitOfWork _unit, ExtradeContext Context, RoleRepository role)
         {
-            this._userManager = _userManager;
             DBContext = Context;
             unit = _unit;
             UserRep = _UserRep;
             this.role = role;
         }
-        //[Route("index")]
-        
-        //[HttpGet("Name")]
-        //public IActionResult index()
-        //{
-        //    dynamic x = new ExpandoObject();
-        //    x.hi = "Hello World";
-        //    return new ObjectResult(x);
-        //}
-     
+        [Route("index")]
+
+        [HttpGet("Name")]
+        public IActionResult index()
+        {
+            dynamic x = new ExpandoObject();
+            x.hi = "Hello World";
+            return new ObjectResult(x);
+        }
+
         [Route("Mvc/AllUsers")]
         //[Authorize(Roles ="admin")]
         public IActionResult AllUsers(
@@ -68,46 +66,46 @@ namespace Extrade.MVC
                         PageIndex,
                         PageSize);
 
-            return View("AllUser",query);
+            return View(query);
         }
-        [Route("mvc/index")]
         public IActionResult Index()
         {
-            return View("Index");
+            return null;
         }
-        [Route("SignInMvc")]
         [HttpGet]
-        public IActionResult SignIn()
+        public IActionResult SignIn(string? returnUrl)
         {
-            return View();
+            return new ObjectResult(new
+            {
+                URL = "User/SignIn"
+            });
         }
-        [Route("SignInMvc")]
         [HttpPost]
-        
-        public async Task<IActionResult> SignIn(UserLoginViewModel obj)
+        public async Task<IActionResult> SignIn([FromBody] UserLoginViewModel obj, string? returnUrl = null)
         {
-            var user = UserRep.GetByEmails(obj.Email);
-            
+            var user = UserRep.GetByEmail(obj.Email);
             if (user.IsDeleted == false)
             {
-                var result = await UserRep.SignInAsMVc(obj);
-                if (!result.Succeeded)
+                var result = await UserRep.SignIn(obj);
+                if (string.IsNullOrEmpty(result))
                 {
                     ModelState.AddModelError("", "Wrong Email or Password !!");
                 }
-                else if (result.IsLockedOut)
-                {
-                    ModelState.AddModelError("", "Sorry, Please Try again Later ");
-                }
                 else
                 {
-                    if (_userManager.GetRolesAsync(user).Result.FirstOrDefault() =="Vendor") { return RedirectToAction("Add", "Vendor"); }
-                      
-                    else if (_userManager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "Mvc/AllUsers"); }
-                    
+                    return new ObjectResult(new
+                    {
+                        Token = result,
+                        ReturnUrl = returnUrl
+                    });
                 }
+
             }
-            return View();
+            List<string> errors = new List<string>();
+            foreach (var i in ModelState.Values)
+                foreach (var e in i.Errors)
+                    errors.Add(e.ErrorMessage);
+            return new ObjectResult(errors);
         }
         [HttpGet]
         public new async Task<IActionResult> SignOut()
@@ -115,45 +113,45 @@ namespace Extrade.MVC
             await UserRep.SignOut();
             return null;
         }
-        //[Route("Register")]
-        //[HttpGet]
-        //public IActionResult Register()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //[Route("CreateUser")]
-        //public async Task<IActionResult> Create(UserControllersViewModel obj)
-        //{
-        //    string Uploade = "/Content/Uploads/UserImage/";
-        //    IFormFile s = obj.uploadedimg;
-        //    string NewFileName = Guid.NewGuid().ToString() + s.FileName;
-        //    obj.Img = Uploade + NewFileName;
-        //    FileStream fs = new FileStream(Path.Combine(
-        //        Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
-        //        ), FileMode.Create);
-        //    s.CopyTo(fs);
-        //    fs.Position = 0;
-        //    obj.Role = "User";
-        //    var result =
-        //    await UserRep.Add(obj);
-        //    if (result.Succeeded)
-        //    {
-        //        return RedirectToAction("AllUsers");
-        //    }
-        //    else return View("Register");
-        //}
+        [Route("Register")]
+        public IActionResult Register()
+        {
+            return null;
+        }
+        [HttpPost]
+
+        public async Task<IActionResult> Create([FromBody] UserControllersViewModel obj)
+        {
+            string Uploade = "/Content/Uploads/UserImage/";
+            IFormFile? s = obj.uploadedimg;
+            string NewFileName = Guid.NewGuid().ToString() + s.FileName;
+            obj.Img = Uploade + NewFileName;
+            FileStream fs = new FileStream(Path.Combine(
+                Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
+                ), FileMode.Create);
+            s.CopyTo(fs);
+            fs.Position = 0;
+            obj.Role = role.GetUserRole().Text;
+            var result =
+            await UserRep.Add(obj);
+            if (result.Succeeded)
+            {
+                return null;
+            }
+            else return null;
+        }
+
         public APIViewModel Update(string ID)
         {
-            var obj= UserRep.GetByID(ID);
+            var obj = UserRep.GetByID(ID);
             return new APIViewModel()
             {
                 Success = true,
                 Massege = "",
-                Data=obj
+                Data = obj
             };
         }
-       
+
         public async Task<APIViewModel> edit([FromBody] UserControllersViewModel obj)
         {
             string Uploade = "/Content/Uploads/UserImage/";

@@ -75,88 +75,10 @@ namespace Extrade.MVC.Controler
                 url = ""
             };
         }
-        [Route("Mvc/SearchProudct")]
-        public IActionResult Search(int PageIndex,int PageSize)  /////// pagination for product in mvc
-        {
-            var Data=ProductRep.Search(PageIndex, PageSize);
-            return View(Data);
-        }
+        //[Route("Mvc/SearchProudct")]
+        
 
-        [HttpGet]
-        [Authorize(Roles ="Vendor")]
-        [Route("Mvc/AddProduct")]
-        public IActionResult Add()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Add(ProductEditViewModel model)
-        {
-            string Upload = "/Content/Uploads/ProductImage/";
-            model.Images = new List<string>();
-            foreach (IFormFile f in model.uploadedimg)
-            {
-                string NewFileName = Guid.NewGuid().ToString() + f.FileName;
-                model.Images.Add(Upload + NewFileName);
-                FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
-                ), FileMode.Create);
-                f.CopyTo(fs);
-                fs.Position = 0;
-            }
-            model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            model.Price *= 10 / 100;
-            ProductRep.Add(model.ToModel());
-            unitOfWork.Submit();
-            return RedirectToAction("");
-        }
-        [HttpGet]
-        public APIViewModel Update(int id)
-        {
-           var result= ProductRep.GetProductByID(id);
-            return new APIViewModel
-            {
-                Success = true,
-                Massege = "",
-                Data = result
-            };
-        }
-        [HttpPost]
-        public APIViewModel Update(ProductEditViewModel obj)
-        {
-            string Upload = "/Content/Uploads/ProductImage/";
-            obj.Images = new List<string>();
-            foreach (IFormFile f in obj.uploadedimg)
-            {
-                string NewFileName = Guid.NewGuid().ToString() + f.FileName;
-                obj.Images.Add(Upload + NewFileName);
-                FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
-                ), FileMode.Create);
-                f.CopyTo(fs);
-                fs.Position = 0;
-            }
-            ProductRep.Update(obj.ToModel());
-            unitOfWork.Submit();
-            return new APIViewModel
-            {
-                 Success=true,
-                 Massege="",
-                 Data=null
-            };
-        }
-        public IActionResult Delete(int ID)
-        {
-            ProductRep.Delete(ID);
-            unitOfWork.Submit();
-            return null;
-        }
-        public IActionResult AcceptProduct(int ID)
-        {
-            ProductRep.ProductStatus(ID);
-            unitOfWork.Submit();
-            return RedirectToAction();
-        }
+       
         //public IActionResult RejectProduct(int ID)
         //{
         //    ProductRep.RejectProduct(ID);
