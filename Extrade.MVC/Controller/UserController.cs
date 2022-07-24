@@ -93,8 +93,6 @@ namespace Extrade.MVC
                 }
                 else
                 {
-                   //var getrole=role.g
-                   // if()
                     return new ObjectResult(new
                     {
                         Token = result,
