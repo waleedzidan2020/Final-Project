@@ -20,9 +20,11 @@ namespace Extrade.MVC.Controler
         public readonly UnitOfWork unit;
         public readonly UserRepository UserRep;
         public readonly RoleRepository role;
+        public readonly UserManager<User> UserManager;
 
-        public UserController(UserRepository _UserRep,UnitOfWork _unit, ExtradeContext Context, RoleRepository role)
+        public UserController(UserManager<User> userManager,UserRepository _UserRep,UnitOfWork _unit, ExtradeContext Context, RoleRepository role)
         {
+            UserManager = userManager;
             DBContext = Context;
             unit = _unit;
             UserRep = _UserRep;
@@ -95,14 +97,18 @@ namespace Extrade.MVC.Controler
                     }
                     else
                     {
+                        var u = UserRep.GetByEmails(obj.Email);
+                        var role = UserManager.GetRolesAsync(u).Result.FirstOrDefault();
+                       
                         return new ObjectResult(new
                         {
+                            Success=true,
                             Token = result,
                             ReturnUrl = returnUrl,
                             message = "Done",
                             id= user.ID,
                             RememberMe = obj.RememberMe.ToString(),
-
+                            Role=role
 
                         });
                     }
@@ -117,9 +123,10 @@ namespace Extrade.MVC.Controler
                     return new ObjectResult(new
                     {
                         Token="",
+                        Success=false,
                         ReturnUrl = returnUrl,
                         message = "EmailIsDeleted",
-                        RememberMe = obj.RememberMe.ToString()
+                        //RememberMe = obj.RememberMe.ToString()
 
 
 

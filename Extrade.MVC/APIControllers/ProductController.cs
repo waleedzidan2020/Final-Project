@@ -48,7 +48,7 @@ namespace Extrade.MVC.Controler
         [Route("Api/Getproduct")]
         [HttpGet]
         public APIViewModel GetForUsers(
-                        
+                        int categoryID=1,
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -61,6 +61,7 @@ namespace Extrade.MVC.Controler
         {
             var query =
                 ProductRep.GetProductForUsers(
+                        categoryID,
                          NameEn,
                          NameAr,
                         Price,
@@ -78,23 +79,29 @@ namespace Extrade.MVC.Controler
                 Data = query
             };
         }
-        //[HttpGet]
-        //public APIViewModel GetProductWithCollection(string CollectionCode)
-        //{
-        //    var result = ProductRep.GetProductForCollection();
-        //    var final= result.Select(p => new ProductViewModel
-        //    {
-        //        CollectionCode = CollectionCode,
-        //    });
+        [HttpGet]
+        public APIViewModel GetProductWithCollection(List<CollectionDetalisEditViewModel> CollectionDetailsCode)
+        {
+            List<int> prodid = new List<int>();
+            foreach(var i in CollectionDetailsCode) {
+                prodid.Add(i.ProductID);
+            }
+            var result = ProductRep.GetProductForCollection(prodid);
+            for(var x = 0; x < CollectionDetailsCode.Count; x++) { 
+                foreach(var i in result)
+                {
+                    i.CollectionID = CollectionDetailsCode[x].CollectionID;
+                }
 
-        //    return new APIViewModel
-        //    {
-        //        Data = final,
-        //        Massege = "",
-        //        Success = true,
-        //        url = ""
-        //    };
-        //}
+            }
+            return new APIViewModel
+            {
+                Data = result,
+                Massege = "",
+                Success = true,
+                url = ""
+            };
+        }
         [Route("Mvc/SearchProudct")]
         public IActionResult Search(int PageIndex,int PageSize)  /////// pagination for product in mvc
         {
@@ -173,16 +180,16 @@ namespace Extrade.MVC.Controler
         }
         public IActionResult AcceptProduct(int ID)
         {
-            ProductRep.AcceptProduct(ID);
+            ProductRep.ProductStatus(ID);
             unitOfWork.Submit();
             return RedirectToAction();
         }
-        public IActionResult RejectProduct(int ID)
-        {
-            ProductRep.RejectProduct(ID);
-            unitOfWork.Submit();
-            return null;
-        }
+        //public IActionResult RejectProduct(int ID)
+        //{
+        //    ProductRep.RejectProduct(ID);
+        //    unitOfWork.Submit();
+        //    return null;
+        //}
         
     }
 }

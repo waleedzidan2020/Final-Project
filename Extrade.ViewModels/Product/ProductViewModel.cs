@@ -53,5 +53,6 @@ namespace Extrade.ViewModels
         public List<string>? Images { get; set; }
         public float Rating { get; set; }
         public string? CollectionCode { get; set; } = null;
+        public int CollectionID { get; set; }= 0;
     }
 }

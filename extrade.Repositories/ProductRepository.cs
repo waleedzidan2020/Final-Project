@@ -70,6 +70,7 @@ namespace Extrade.Repositories
 
         }
         public PaginingViewModel<List<ProductViewModel>> GetProductForUsers(
+                        int categoryID,
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -107,9 +108,9 @@ namespace Extrade.Repositories
                     Description = p.Description,
                     Category = (p.Category != null)?p.Category.NameEn:"not provided",
                     VendorName = (p.Vendor != null)?p.Vendor.User.NameEn : "not provided",
-                    Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average():0
-                }).Where(p => p.Status == ProductStatus.accepted 
-                && p.IsDeleted == false && p.Quantity>0 );
+                    Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average()
+                }).Where(p => p.Status == extrade.models.ProductStatus.accepted 
+                && p.IsDeleted == false && p.Quantity>0 && p.CategoryID==categoryID);
 
             PaginingViewModel<List<ProductViewModel>>
                 FinalResult = new PaginingViewModel<List<ProductViewModel>>()
@@ -123,20 +124,16 @@ namespace Extrade.Repositories
             return FinalResult;
 
         }
-        public List<ProductViewModel> GetProductForCollection()
+        public List<ProductViewModel> GetProductForCollection(List<int> Productid)
         {
-            var query = base.GetList().Select(p => new ProductViewModel
-            {
-                ID = p.ID,
-                NameEn = p.NameEn,
-                NameAr = p.NameAr,
-                Description = p.Description,
-                CollectionCode = null,
-                Status=p.Status,
-                Category = p.Category.NameEn,
-                VendorName = p.Vendor.User.UserName
-            });
-            return query.ToList();
+            var prod = new List<ProductViewModel>();
+            foreach(var i in Productid) 
+            { 
+                var product = GetProductByID(i);
+                prod.Add(product);
+            }
+            
+            return prod;
         }
         public IPagedList<ProductViewModel> Search(int PageIndex = 1, int PageSize = 6)
         =>
@@ -189,7 +186,7 @@ namespace Extrade.Repositories
 
             return base.Update(query).Entity.ToViewModel();
         }
-        public ProductViewModel AcceptProduct(int ID)
+        public ProductViewModel ProductStatus(int ID)
         {
             var filter = PredicateBuilder.New<Product>();
             filter = filter.Or(p => p.ID == ID);
@@ -198,27 +195,28 @@ namespace Extrade.Repositories
             {
                 query.Status = extrade.models.ProductStatus.accepted;
             }
-            else if (query.Status==extrade.models.ProductStatus.rejected)
-                query.Status=extrade.models.ProductStatus.accepted;
+            else if (query.Status == extrade.models.ProductStatus.rejected)
+                query.Status = extrade.models.ProductStatus.accepted;
 
-            else query.Status=extrade.models.ProductStatus.rejected;
-            return base.Update(query).Entity.ToViewModel();
-        }
-        public ProductViewModel RejectProduct(int ID)
-        {
-            var filter = PredicateBuilder.New<Product>();
-            filter = filter.Or(p => p.ID == ID);
-            var query = GetbyID(filter);
-            if (query.Status == extrade.models.ProductStatus.pending)
-            {
-                query.Status = extrade.models.ProductStatus.rejected;
-            }
             else if (query.Status == extrade.models.ProductStatus.accepted)
                 query.Status = extrade.models.ProductStatus.rejected;
-
-            else query.Status = extrade.models.ProductStatus.accepted;
             return base.Update(query).Entity.ToViewModel();
         }
+        //public ProductViewModel RejectProduct(int ID)
+        //{
+        //    var filter = PredicateBuilder.New<Product>();
+        //    filter = filter.Or(p => p.ID == ID);
+        //    var query = GetbyID(filter);
+        //    if (query.Status == extrade.models.ProductStatus.pending)
+        //    {
+        //        query.Status = extrade.models.ProductStatus.rejected;
+        //    }
+        //    else if (query.Status == extrade.models.ProductStatus.accepted)
+        //        query.Status = extrade.models.ProductStatus.rejected;
+
+        //    else query.Status = extrade.models.ProductStatus.accepted;
+        //    return base.Update(query).Entity.ToViewModel();
+        //}
 
     }   
 }

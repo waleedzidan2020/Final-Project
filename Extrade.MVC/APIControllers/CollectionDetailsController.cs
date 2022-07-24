@@ -52,11 +52,16 @@ namespace Extrade.MVC.Controler
         }
         
         [HttpPost]
-        public IActionResult Add(CollectionDetalisEditViewModel model)
+        public IActionResult Add([FromBody]List<CollectionDetalisEditViewModel> model)
         {
-            CollectionDetailsRepo.Add(model);
+            List<CollectionDetalisEditViewModel> added = new List<CollectionDetalisEditViewModel>();
+            foreach(var i in model) { 
+            CollectionDetailsRepo.Add(i);
+                added.Add(i);
+            }
             UnitOfWork.Submit();
-            return RedirectToAction("GetProductWithCollection","Product", model.CollectionID);
+            
+            return RedirectToAction("GetProductWithCollection","Product", added);
         }
         [HttpPost]
         public APIViewModel Delete(CollectionDetalisEditViewModel obj)
