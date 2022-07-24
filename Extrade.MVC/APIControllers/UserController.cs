@@ -254,10 +254,10 @@ namespace Extrade.MVC.Controler
             unit.Submit();
             return RedirectToAction("AllUsers", "User");
         }
-        public async Task<IActionResult> UpdateRole(string ID)
-        {
-            await UserRep.AddRoleToUser(ID);
-            return RedirectToAction("AllUsers", "User");
-        }
+        //public async Task<IActionResult> UpdateRole(string ID)
+        //{
+        //    await UserRep.AddRoleToUser(ID);
+        //    return RedirectToAction("AllUsers", "User");
+        //}
     }
 }
