@@ -17,40 +17,27 @@
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                              <th scope="col">ID</th>
-                                              <th scope="col">UserID</th>
-                                              <th scope="col">DriverID</th>
+                                              <th scope="col">status</th>
+                                              <th scope="col">Date</th>
+                                              @*<th scope="col">DriverID</th>*@
                                               <th scope="col">Status</th>
                                               <th scope="col">Date</th>
                                               <th scope="col">OrderDetails</th>
                                               <th scope="col">IsDeleted</th>
-                                              <th scope="col">Edit</th>
-                                              <th scope="col">RoleAdmin</th>
+                                         
 
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                              <th scope="col">UserID</th>
-                                              <th scope="col">DriverID</th>
-                                              <th scope="col">Status</th>
-                                              <th scope="col">Date</th>
-                                              <th scope="col">OrderDetails</th>
-                                              <th scope="col">IsDeleted</th>
-                                              <th scope="col">Edit</th>
-                                              <th scope="col">RoleAdmin</th>
-                                        </tr>
-                                    </tfoot>
+                                   
                                     <tbody>
       @foreach (var p in Model.Data){
     <tr>
        <td>@p.ID</td>
         <td>@p.UserID</td>
-      <td>@p.DriverID.</td>
+      @*<td>@p.DriverID</td>*@
       <td>@p.status</td>
       <td>@p.Date</td>
-      <td>@p.OrderDetails</td>
+      @*<td>@p.OrderDetails</td>*@
       
       <td><select>@foreach (var m in Model.Data)
                     {
@@ -68,8 +55,8 @@
           }
                     
                 </td>
-                <td><a asp-action="Update" asp-controller="Order" asp-route-Id=@p.ID >Edit</a></td>
-                <td><a asp-action="UpdateRole" asp-controller="Order" asp-route-Id=@p.ID>Role</a></td>
+                @*<td><a asp-action="Update" asp-controller="Order" asp-route-Id=@p.ID >Edit</a></td>
+                <td><a asp-action="UpdateRole" asp-controller="Order" asp-route-Id=@p.ID>Role</a></td>*@
     </tr>
     }
     

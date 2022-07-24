@@ -43,9 +43,6 @@ namespace Extrade.MVC
         {
 
             var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn, IsDeleted, orderby, IsAsceding, pageindex, pagesize);
-
-
-
             return View(res.Data);
         }
         [Authorize(Roles = "Vendor")]
