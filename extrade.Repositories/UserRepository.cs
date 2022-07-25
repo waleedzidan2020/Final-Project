@@ -177,9 +177,18 @@ namespace Extrade.Repositories
             await SignInManager.SignOutAsync();
         public async Task<IdentityResult> Add(UserControllersViewModel obj)
         {
-            var result = obj.ChangeUserToUserControllersViewModel();
-            await UserManager.CreateAsync(result, obj.Password);
-            return await UserManager.AddToRoleAsync(result , obj.Role );
+            try
+            {
+
+                var result = obj.ChangeUserToUserControllersViewModel();
+                await UserManager.CreateAsync(result, obj.Password);
+                var res = await UserManager.AddToRoleAsync(result, obj.Role);
+                return res;
+            }catch(Exception e)
+            {
+                return new IdentityResult ();
+            }
+          
         }
         public async Task<IdentityResult> Update(UserControllersViewModel result)
         {

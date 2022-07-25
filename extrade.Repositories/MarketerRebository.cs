@@ -146,7 +146,8 @@ namespace Extrade.Repositories
                 NameEn = model.NameEn,
                 Phones = model.Phones.ToList(),
                 Street = model.Street,
-                Role=model.Role
+                Img = model.Img,
+                Role =model.Role
             };
             var how = await UserRepo.Add(user);
             if (how.Succeeded)

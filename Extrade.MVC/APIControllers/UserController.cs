@@ -82,7 +82,7 @@ namespace Extrade.MVC.Controler
         //    };
         //}
         [HttpPost]
-        //[Route("User/Login")]
+        [Route("User/Login")]
         public async Task<ObjectResult> SignIn([FromBody] UserLoginViewModel obj, string? returnUrl = null)
         {
             var user = UserRep.GetByEmail(obj.Email);
@@ -93,7 +93,17 @@ namespace Extrade.MVC.Controler
                     var result = await UserRep.SignIn(obj);
                     if (string.IsNullOrEmpty(result))
                     {
-                        ModelState.AddModelError("", "Wrong Email or Password !!");
+                        return new ObjectResult(new
+                        {
+                            Success = false,
+                            Token = "",
+                            ReturnUrl = "",
+                            message = "",
+                            id = "",
+                            RememberMe = "",
+                            Role = ""
+
+                        });
                     }
                     else
                     {
@@ -179,7 +189,7 @@ namespace Extrade.MVC.Controler
         //    return null;
         //}
         [HttpPost]
-        //[Route("User/Register")]
+        [Route("User/Register")]
         public async Task<APIViewModel> Create([FromBody] UserControllersViewModel obj)
         {
             //string Uploade = "/Content/Uploads/UserImage/";
@@ -226,16 +236,16 @@ namespace Extrade.MVC.Controler
         [Route("User/Profile")] 
         public async Task<APIViewModel> edit([FromBody] UserControllersViewModel obj)
         {
-            string Uploade = "/Content/Uploads/UserImage/";
-            IFormFile? s = obj.uploadedimg;
-            string NewFileName = Guid.NewGuid().ToString() + s.FileName;
-            obj.Img = Uploade + NewFileName;
-            FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
-                ), FileMode.Create);
+            //string Uploade = "/Content/Uploads/UserImage/";
+            //IFormFile? s = obj.uploadedimg;
+            //string NewFileName = Guid.NewGuid().ToString() + s.FileName;
+            //obj.Img = Uploade + NewFileName;
+            //FileStream fs = new FileStream(Path.Combine(
+            //    Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
+            //    ), FileMode.Create);
 
-            s.CopyTo(fs);
-            fs.Position = 0;
+            //s.CopyTo(fs);
+            //fs.Position = 0;
             await UserRep.Update(obj);
             unit.Submit();
             return new APIViewModel

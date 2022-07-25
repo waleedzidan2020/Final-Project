@@ -84,10 +84,28 @@ namespace Extrade.MVC.Controler
         //}
 
         [HttpGet]
-        public IActionResult Update(string id)
+        public APIViewModel Update(string id)
         {
-            var res = marketerRebository.GetOne(id);
-            return View(res);
+            try
+            {
+
+                var res = marketerRebository.GetOne(id);
+                return new APIViewModel
+                {
+                    Data = res,
+                    Success = true,
+          
+                };
+            }
+            catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Data = null,
+                    Success = false,
+
+                };
+            }
         }
 
         [HttpPost]

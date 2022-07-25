@@ -17,7 +17,7 @@ namespace Extrade.MVC.Controler
             this.unitOfWork = unitOfWork;
         }
        
-        [Authorize(Roles ="User")]
+        //[Authorize(Roles ="User")]
         [Route("Api/Getproduct")]
         [HttpGet]
         public APIViewModel GetForUsers(

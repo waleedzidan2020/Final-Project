@@ -78,24 +78,35 @@ namespace Extrade.MVC
 
 
             //    ), FileMode.Create);
-           // model.TaxCard = "  ";
+            // model.TaxCard = "  ";
 
             //s.CopyTo(fs);
-            //fs.Position = 0;
-            model.TaxCard = "  ";
+            //fs.Position = 0;try{
+            try
+            {
+                model.TaxCard = "  ";
+               
+                model.Role = "Marketer";
+                var res = await marketerRebository.Add(model);
+                unitOfWork.Submit();
 
-            model.Role = "Marketer";
-            var res=  marketerRebository.Add(model);
-            unitOfWork.Submit();
 
+                return new ObjectResult(new
+                {
 
-            return new ObjectResult(new {
-            
-            
-            
-            
-            
-            });
+                    Success = true
+
+                });
+            }
+            catch(Exception e)
+            {
+                return new ObjectResult(new
+                {
+
+                    Success = false
+
+                });
+            }
         }
 
         //[HttpGet]
