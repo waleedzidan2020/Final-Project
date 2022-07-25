@@ -192,10 +192,7 @@ namespace Extrade.MVC
         public async Task<IActionResult> UpdateRole(string ID)
         {
             await UserRep.AddRoleToUser(ID);
-            return new ObjectResult(new
-            {
-                URL = "User/AllUsers"
-            });
+            return RedirectToAction("AllUsers", "User");
         }
     }
 }

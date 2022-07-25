@@ -10,15 +10,17 @@ namespace Extrade.MVC
     public class ProductController : Controller
     {
         private readonly ProductRepository ProductRep;
+        private readonly VendorRepository VendorRep;
         private readonly UnitOfWork unitOfWork;
 
 
-        public ProductController(ProductRepository ProductRep, UnitOfWork unitOfWork)
+        public ProductController(VendorRepository Vendorrepo,ProductRepository ProductRep, UnitOfWork unitOfWork)
         {
+            VendorRep=Vendorrepo;
             this.ProductRep= ProductRep;
             this.unitOfWork = unitOfWork;
         }
-        [Authorize("Admin"),Authorize("Vendor")]
+        //[Authorize("Admin")]
         [Route("ProductMvc/Get")]
         public IActionResult Get(
                         int ID = 0,
@@ -143,24 +145,29 @@ namespace Extrade.MVC
         [Authorize(Roles = "Vendor")]
         public IActionResult Add(ProductEditViewModel model)
         {
-            string Upload = "/Content/Uploads/ProductImage/";
-            model.Images = new List<string>();
-            foreach (IFormFile f in model.uploadedimg)
-            {
-                string NewFileName = Guid.NewGuid().ToString() + f.FileName;
-                model.Images.Add(Upload + NewFileName);
-                FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
-                ), FileMode.Create);
-                f.CopyTo(fs);
-                fs.Position = 0;
-            }
             model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            model.Price *= 10f / 100f;
-            model.CategoryID = 1;
-            ProductRep.Add(model.ToModel());
-            unitOfWork.Submit();
-            return RedirectToAction("VendorGet");
+            var vendor = VendorRep.GetOne(model.VendorID);
+            if (vendor.Status == VendorStatus.accepted)
+            {
+                string Upload = "/Content/Uploads/ProductImage/";
+                model.Images = new List<string>();
+                foreach (IFormFile f in model.uploadedimg)
+                {
+                    string NewFileName = Guid.NewGuid().ToString() + f.FileName;
+                    model.Images.Add(Upload + NewFileName);
+                    FileStream fs = new FileStream(Path.Combine(
+                    Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
+                    ), FileMode.Create);
+                    f.CopyTo(fs);
+                    fs.Position = 0;
+                }
+                model.Price *= 10f / 100f;
+                model.CategoryID = 1;
+                ProductRep.Add(model.ToModel());
+                unitOfWork.Submit();
+                return RedirectToAction("VendorGet");
+            }
+            else return RedirectToAction("VendorGet");
         }
         [HttpGet]
         public APIViewModel Update(int id)
