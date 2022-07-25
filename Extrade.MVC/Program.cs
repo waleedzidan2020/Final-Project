@@ -89,7 +89,10 @@ namespace Extrade.MVC
                 c.AccessDeniedPath = "/Home/index";
                 c.LoginPath = "/User/SignIn";
             });
-
+            builder.Services.ConfigureApplicationCookie(c =>
+            {
+                c.LoginPath = "/Vendor/add";
+            });
             builder.Services.AddCors(i =>
             {
                 i.AddDefaultPolicy(b =>

@@ -45,7 +45,7 @@ namespace Extrade.MVC
             var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn, IsDeleted, orderby, IsAsceding, pageindex, pagesize);
             return View(res.Data);
         }
-        [Authorize(Roles = "Vendor")]
+        //[Authorize(Roles = "Vendor")]
         [HttpGet]
         public IActionResult Add(User modeluser)
         {
@@ -59,7 +59,7 @@ namespace Extrade.MVC
         }
 
         [HttpPost]
-        [Authorize(Roles = "Vendor")]
+        //[Authorize(Roles = "Vendor")]
         public IActionResult Add(VendorEditViewModel model)
         {
             string Uploade = "/Content/Uploads/Vendor/";
