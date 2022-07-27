@@ -45,22 +45,26 @@ namespace Extrade.MVC
             var res = repo.GetList(_id, _BrandNameAr, _BrandNameEn, _NameProductAr, _NameProductEn, IsDeleted, orderby, IsAsceding, pageindex, pagesize);
             return View(res.Data);
         }
-        //[Authorize(Roles = "Vendor")]
+        [Authorize(Roles = "Vendor")]
         [HttpGet]
-        public IActionResult Add(User modeluser)
+        public IActionResult Add()
         {
             ViewBag.id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var data = repo.GetOne(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (data == null)
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var Vendor = repo.GetOne(id);
+            if (Vendor == null)
+
                 return View();
-            else
-                return RedirectToAction("Get", "Category");
+            else {
+
+                return RedirectToAction("Add", "Product");
+            }
 
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Vendor")]
-        public IActionResult Add(VendorEditViewModel model)
+        [Authorize(Roles = "Vendor")]
+        public  IActionResult Add(VendorEditViewModel model)
         {
             string Uploade = "/Content/Uploads/Vendor/";
             model.VendorImage = new List<string>();
@@ -74,10 +78,10 @@ namespace Extrade.MVC
                 f.CopyTo(fs);
                 fs.Position = 0;
             }
-            repo.Add(model.ToModel());
+            repo.Add2(model);
             unitOfWork.Submit();
 
-            return RedirectToAction("Get", "Category");
+            return RedirectToAction("Add", "Product");
 
         }
 

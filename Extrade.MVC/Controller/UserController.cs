@@ -20,13 +20,16 @@ namespace Extrade.MVC
         public readonly UnitOfWork unit;
         public readonly UserRepository UserRep;
         public readonly RoleRepository role;
+        public readonly UserManager<User> manager;
 
-        public UserController(UserRepository _UserRep, UnitOfWork _unit, ExtradeContext Context, RoleRepository role)
+
+        public UserController(UserRepository _UserRep, UnitOfWork _unit, ExtradeContext Context, RoleRepository role, UserManager<User> manager)
         {
             DBContext = Context;
             unit = _unit;
             UserRep = _UserRep;
             this.role = role;
+            this.manager = manager;
         }
         [Route("index")]
 
@@ -72,40 +75,43 @@ namespace Extrade.MVC
         {
             return null;
         }
+        [Route("SignInMvc")]
         [HttpGet]
-        public IActionResult SignIn(string? returnUrl)
+        public IActionResult SignIn()
         {
-            return new ObjectResult(new
-            {
-                URL = "User/SignIn"
-            });
+            return View();
+
         }
+        [Route("SignInMvc")]
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromBody] UserLoginViewModel obj, string? returnUrl = null)
+
+        public async Task<IActionResult> SignIn( UserLoginViewModel obj)
         {
-            var user = UserRep.GetByEmail(obj.Email);
+       
+            var user = UserRep.GetByEmails(obj.Email);
             if (user.IsDeleted == false)
             {
-                var result = await UserRep.SignIn(obj);
-                if (string.IsNullOrEmpty(result))
+                var result = await UserRep.SignInAsMVc(obj);
+                if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", "Wrong Email or Password !!");
                 }
+                else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError("", "Sorry, Please Try again Later ");
+                }
                 else
                 {
-                    return new ObjectResult(new
-                    {
-                        Token = result,
-                        ReturnUrl = returnUrl
-                    });
+                    if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Vendor") { return RedirectToAction("Add", "Vendor"); }
+
+                    else if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "Mvc/AllUsers"); }
+
+                 
                 }
 
             }
-            List<string> errors = new List<string>();
-            foreach (var i in ModelState.Values)
-                foreach (var e in i.Errors)
-                    errors.Add(e.ErrorMessage);
-            return new ObjectResult(errors);
+            return View();
+         
         }
         [HttpGet]
         public new async Task<IActionResult> SignOut()
@@ -179,15 +185,13 @@ namespace Extrade.MVC
             };
         }
 
+
         //[Authorize(Roles ="admin")]
         public async Task<IActionResult> SoftDelete(string ID)
         {
             await UserRep.Delete(ID);
             unit.Submit();
-            return new ObjectResult(new
-            {
-                URL = "User/AllUsers"
-            });
+            return RedirectToAction("AllUsers");
         }
         public async Task<IActionResult> UpdateRole(string ID)
         {

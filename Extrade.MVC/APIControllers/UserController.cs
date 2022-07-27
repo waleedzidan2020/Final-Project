@@ -82,7 +82,7 @@ namespace Extrade.MVC.Controler
         //    };
         //}
         [HttpPost]
-        [Route("User/Login")]
+       
         public async Task<ObjectResult> SignIn([FromBody] UserLoginViewModel obj, string? returnUrl = null)
         {
             var user = UserRep.GetByEmail(obj.Email);
@@ -257,13 +257,13 @@ namespace Extrade.MVC.Controler
             };
         }
 
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> SoftDelete(string ID)
-        {
-            await UserRep.Delete(ID);
-            unit.Submit();
-            return RedirectToAction("AllUsers", "User");
-        }
+        //[Authorize(Roles = "admin")]
+        //public async Task<IActionResult> SoftDelete(string ID)
+        //{
+        //    await UserRep.Delete(ID);
+        //    unit.Submit();
+        //    return RedirectToAction("AllUsers", "User");
+        //}
         //public async Task<IActionResult> UpdateRole(string ID)
         //{
         //    await UserRep.AddRoleToUser(ID);

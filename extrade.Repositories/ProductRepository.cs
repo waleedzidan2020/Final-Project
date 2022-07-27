@@ -69,12 +69,12 @@ namespace Extrade.Repositories
             return FinalResult;
 
         }
-        public PaginingViewModel<List<ProductViewModel>> GetProductForVendor(
+        public List<ProductViewModel> GetProductForVendor(
                         string? ID,
-                        string? NameEn = null,
-                        string? NameAr = null,
+                        string? NameEn = "",
+                        string? NameAr = "",
                         float Price = 0,
-                        string? CategoryName = null,
+                        string? CategoryName = "",
                         DateTime? ModifiedDate = null,
                         string OrderBy = "",
                         bool IsAscending = false,
@@ -97,31 +97,25 @@ namespace Extrade.Repositories
                 Filtering = Filtering.Or(p => p.ModifiedDate <= ModifiedDate.Value);
             if (oldFiltering == Filtering)
                 Filtering = null;
-            var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, null);
+            var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, "Category", "Vendor");
 
             var Result =
                 query.Select(p => new ProductViewModel()
                 {
                     ID = p.ID,
+                    CategoryID = 1,
                     NameEn = p.NameEn,
                     NameAr = p.NameAr,
+                    Price = p.Price,
                     Description = p.Description,
                     Category = p.Category.NameEn,
                     VendorName = p.Vendor.User.NameEn,
-                    Rating = p.Ratings.Select(p => p.Value).Average()
-                }).Where(p=>p.VendorID==ID&&p.Status==extrade.models.ProductStatus.accepted);
+                    IsDeleted = p.IsDeleted
 
-            PaginingViewModel<List<ProductViewModel>>
-                FinalResult = new PaginingViewModel<List<ProductViewModel>>()
-                {
-                    PageIndex = PageIndex,
-                    PageSize = PageSize,
-                    Count = GetList().Count(),
-                    Data = Result.ToList(),
-                };
 
-            return FinalResult;
+                });
 
+            return  Result.ToList();
         }
         public PaginingViewModel<List<ProductViewModel>> GetProductForUsers(
                         int categoryID,

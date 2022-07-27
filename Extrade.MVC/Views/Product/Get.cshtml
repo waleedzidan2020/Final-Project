@@ -43,7 +43,7 @@
       <td>@user.VendorName</td>
       
       <td>@if (@user.IsDeleted == true)
-          {<a asp-action="Delete" asp-controller="User" 
+          {<a asp-action="Delete" asp-controller="Product" 
           asp-route-Id="@user.ID"
           class="btn btn-primary">Not Activate</a>
           }

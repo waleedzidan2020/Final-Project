@@ -190,7 +190,11 @@ namespace Extrade.Repositories
 
 
         }
-
+        public VendorViewModel Add2(VendorEditViewModel model)
+        {
+            Vendor ven = model.ToModel();
+            return base.Add(ven).Entity.ToViewModel();
+        }
 
 
         public async Task<Vendor> Add(UserVendorEditViewModel model) {

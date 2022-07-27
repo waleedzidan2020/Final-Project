@@ -23,7 +23,7 @@ namespace Extrade.MVC
         //[Authorize("Admin")]
         [Route("ProductMvc/Get")]
         public IActionResult Get(
-                        int ID = 0,
+                        string ID = "",
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -35,7 +35,7 @@ namespace Extrade.MVC
                         int PageSize = 20)
         {
             var query = 
-                ProductRep.GetProduct( ID,
+                ProductRep.GetProductForVendor( ID,
                          NameEn ,
                          NameAr,
                         Price,
@@ -46,7 +46,7 @@ namespace Extrade.MVC
                         PageIndex ,
                         PageSize );
 
-            return View("Get",query.Data);
+            return View("Get",query);
         }
         public IActionResult VendorGet(
                         string ID =null,
@@ -73,8 +73,9 @@ namespace Extrade.MVC
                         PageIndex,
                         PageSize);
 
-            return View("VendorGet", query.Data);
+            return View("VendorGet", query);
         }
+        #region ss
         //[Authorize(Roles ="User")]
         //[Route("Api/Getproduct")]
         //[HttpGet]
@@ -127,6 +128,7 @@ namespace Extrade.MVC
         //        url = ""
         //    };
         //}
+        #endregion
         [Route("Mvc/SearchProudct")]
         public IActionResult Search(int PageIndex,int PageSize)  /////// pagination for product in mvc
         {
@@ -137,9 +139,9 @@ namespace Extrade.MVC
         [HttpGet]
         [Authorize(Roles ="Vendor")]
      
-        public IActionResult Add()
+        public IActionResult Add() //edit ui 
         {
-            return View("VendorAdd");
+            return View();
         }
         [HttpPost]
         [Authorize(Roles = "Vendor")]
@@ -147,8 +149,8 @@ namespace Extrade.MVC
         {
             model.VendorID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var vendor = VendorRep.GetOne(model.VendorID);
-            if (vendor.Status == VendorStatus.accepted)
-            {
+            //if (vendor.Status == VendorStatus.accepted)
+            //{
                 string Upload = "/Content/Uploads/ProductImage/";
                 model.Images = new List<string>();
                 foreach (IFormFile f in model.uploadedimg)
@@ -161,13 +163,13 @@ namespace Extrade.MVC
                     f.CopyTo(fs);
                     fs.Position = 0;
                 }
-                model.Price *= 10f / 100f;
+                model.Price *= (10f / 100f);
                 model.CategoryID = 1;
                 ProductRep.Add(model.ToModel());
                 unitOfWork.Submit();
                 return RedirectToAction("VendorGet");
-            }
-            else return RedirectToAction("VendorGet");
+            //}
+            //else return RedirectToAction("VendorGet");
         }
         [HttpGet]
         public APIViewModel Update(int id)
@@ -208,7 +210,7 @@ namespace Extrade.MVC
         {
             ProductRep.Delete(ID);
             unitOfWork.Submit();
-            return null;
+            return RedirectToAction("Get");
         }
         public IActionResult AcceptProduct(int ID)
         {

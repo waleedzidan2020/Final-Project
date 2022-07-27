@@ -24,12 +24,7 @@ namespace Extrade.MVC
             //       builder.Services.Configure<IdentityOptions>(options =>
             //options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             builder.Services.AddRazorPages();
-            builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
-            {
-                o.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-                o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
-
+            
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -87,12 +82,14 @@ namespace Extrade.MVC
             builder.Services.ConfigureApplicationCookie(c =>
             {
                 c.AccessDeniedPath = "/Home/index";
-                c.LoginPath = "/User/SignIn";
+                c.LoginPath = "/SignInMvc";
             });
-            builder.Services.ConfigureApplicationCookie(c =>
+            builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
             {
-                c.LoginPath = "/Vendor/add";
+                o.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
+
             builder.Services.AddCors(i =>
             {
                 i.AddDefaultPolicy(b =>

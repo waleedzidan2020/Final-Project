@@ -53,9 +53,9 @@ namespace Extrade.MVC
             await UserRep.Add(obj);
             if (result.Succeeded)
             {
-                return RedirectToAction("SignIn");
+                return RedirectToAction("SignIn","User");
             }
-            else return View("Register");
+            else return View("Register/Vendor");
         }
 
 
@@ -83,37 +83,7 @@ namespace Extrade.MVC
         }
 
 
-        [HttpGet]
-        [Route("/SignIn/Vendor")]
-        public IActionResult SignIn()
-        {
-            return View();
-        }
-
-
-        [HttpPost]
-        [Route("/SignIn/Vendor")]
-        public async Task<IActionResult> SignIn(UserLoginViewModel obj)
-        {
-
-            var result = await UserRep.SignInAsMVc(obj);
-            if (obj.ToUserLogViewModel().IsDeleted == false)
-            {
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", "Wrong Email or Password !!");
-                }
-                else if (result.IsLockedOut)
-                {
-                    ModelState.AddModelError("", "Sorry, Please Try again Later ");
-                }
-                else
-                {
-                    return RedirectToAction("Add", "Vendor");
-                }
-            }
-            return View();
-        }
+       
 
 
         [HttpGet]
