@@ -94,6 +94,7 @@ namespace Extrade.Repositories
                 Country = p.User.Country,
                 City = p.User.City,
                 Street = p.User.Street,
+                IsDeleted=p.User.IsDeleted
             });
 
 
@@ -109,6 +110,12 @@ namespace Extrade.Repositories
 
         }
 
+
+
+
+
+
+       
 
 
         public string GetVendorbyProductID(int ID)
@@ -183,10 +190,37 @@ namespace Extrade.Repositories
 
 
             var res = base.GetByID(filterd);
-           
-            res.IsDeleted =true;
 
+            if (res.IsDeleted == false)
+            {
+                res.IsDeleted = true;
+            }
+            else res.IsDeleted = false;
             return res.ToViewModel();
+
+
+        }
+
+
+        public async Task<Vendor> Delete(string id)
+        {
+
+            var filterd = PredicateBuilder.New<Vendor>();
+            var old = filterd;
+
+            filterd = filterd.Or(p => p.UserID == id);
+
+
+            var res = base.GetByID(filterd);
+
+
+            if (res.IsDeleted == false)
+            {
+                res.IsDeleted = true;
+            }
+            else res.IsDeleted = false;
+
+            return res;
 
 
         }

@@ -26,7 +26,7 @@ namespace Extrade.MVC
           return View();
         }
         [HttpPost]
-       [Route("Role/add")]
+      
         public async Task<IActionResult> Add(RoleEditViewModel obj)
         {
             if (ModelState.IsValid) 
