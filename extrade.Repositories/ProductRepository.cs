@@ -209,6 +209,16 @@ namespace Extrade.Repositories
             var query = base.GetByID(filter);
             return query.ToViewModel();
         }
+        public Product GetProductModelByID(int ID)
+        {
+            var filter = PredicateBuilder.New<Product>();
+            var old = filter;
+            if (ID > 0)
+                filter = filter.Or(p => p.ID == ID);
+
+            var query = base.GetByID(filter);
+            return query;
+        }
         public ProductViewModel Add(ProductEditViewModel obj) =>
              base.Add(obj.ToModel()).Entity.ToViewModel();
         

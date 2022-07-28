@@ -16,11 +16,14 @@ namespace Extrade.Repositories
         private readonly OrderRepository orderRepository;
         private readonly VendorRepository VendorRepository;
         private readonly PaymentRepository PaymentRepo;
-        public OrderDetailsRepositoty(ExtradeContext _DBContext,
+        private readonly ProductRepository ProdRepo;
+        public OrderDetailsRepositoty(ProductRepository _prodRepo,
+            ExtradeContext _DBContext,
             OrderRepository OrderRepository,
             VendorRepository vendorRepository,
             PaymentRepository _paymentRepo) : base(_DBContext)
         {
+            ProdRepo = _prodRepo;
             orderRepository = OrderRepository;
             VendorRepository = vendorRepository;
             PaymentRepo = _paymentRepo;
@@ -53,16 +56,59 @@ namespace Extrade.Repositories
                 var updatingTotalPrice = orderRepository.Update(GetOrder).Entity;
                 vendor.Balance += (OrderDetails[i].SubPrice*(10/100));
                 var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
-                if (GetOrder.CollectionCode != null) { 
-                    Paymentacc.Balance += updatingTotalPrice.TotalPrice*(95/100);
-                }
-                else
-                {
-                    Paymentacc.Balance += updatingTotalPrice.TotalPrice / 100;
-                }
+                Paymentacc.Balance += updatingTotalPrice.TotalPrice / 100;
+                
                 var payment = PaymentRepo.Add(Paymentacc).Entity;
             };
             return result;
+        }
+        public List<OrderDetails> AddForCollection(List<CollectionDetails> CollectionDetails
+            ,OrderViewModel order)
+        {
+            var Paymentacc = new AllPayment();
+            var result = new List<OrderDetails>();
+            var OrderModel = orderRepository.GetOrderByID(order.ID);
+            for(var i=0;i<CollectionDetails.Count;i++)
+            {
+                var query = ProdRepo.GetProductModelByID(CollectionDetails[i].ProductID);
+                var od = new OrderDetails()
+                {
+                    ProductId = query.ID,
+                    Quantity = 1,
+                    SubPrice = 1 * query.Price,
+                    OrderId = OrderModel.ID
+                };
+                base.Add(od).Entity.ToViewModel();
+                result.Add(od);
+                
+                var VendorID = VendorRepository.GetVendorbyProductID(query.ID);
+                var vendor = VendorRepository.GetOne(VendorID);
+                order.TotalPrice += od.SubPrice;
+                var updatingTotalPrice = orderRepository.Update(OrderModel).Entity;
+                vendor.Balance += (od.SubPrice * (10 / 100));
+                var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
+                Paymentacc.Balance += updatingTotalPrice.TotalPrice * (95 / 100);
+                var payment = PaymentRepo.Add(Paymentacc).Entity;
+            }
+
+            return result;
+
+
+            //for (int i = 0; i < CollectionDetails.Count; i++)
+            //{
+            //    var GetOrder = orderRepository.GetOrderByID(OrderDetails[i].OrderId);
+
+            //    if (GetOrder.CollectionCode != null)
+            //    {
+
+            //    }
+            //    else
+            //    {
+            //        Paymentacc.Balance += updatingTotalPrice.TotalPrice / 100;
+            //    }
+
+            //};
+
         }
         public OrderDetails GetOneByID(int ID)
         {
