@@ -84,7 +84,9 @@ namespace Extrade.Repositories
         {
             var Filtering = PredicateBuilder.New<Product>();
             var oldFiltering = Filtering;
-            
+            if(!string.IsNullOrEmpty(ID))
+                Filtering = Filtering.Or(p => p.VendorID.Contains(ID));
+
             if (!string.IsNullOrEmpty(NameEn))
                 Filtering = Filtering.Or(p => p.NameEn.Contains(NameEn));
             if (!string.IsNullOrEmpty(NameAr))
@@ -110,7 +112,9 @@ namespace Extrade.Repositories
                     Description = p.Description,
                     Category = p.Category.NameEn,
                     VendorName = p.Vendor.User.NameEn,
-                    IsDeleted = p.IsDeleted
+                    IsDeleted = p.IsDeleted,
+                    VendorID=p.Vendor.UserID
+                    
 
 
                 });

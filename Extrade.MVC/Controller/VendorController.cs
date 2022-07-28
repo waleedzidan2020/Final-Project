@@ -143,6 +143,18 @@ namespace Extrade.MVC
 
 
 
+
+
+
+        }
+
+
+        public async Task<IActionResult> SoftDelete(string ID)
+        {
+            await userRepository.Delete(ID);
+            await repo.Delete(ID);
+            unitOfWork.Submit();
+            return RedirectToAction("GetList");
         }
 
         public IActionResult Details(string _id = "", string _BrandNameAr = "", string _BrandNameEn = "", bool IsDeleted = false, string _NameProductAr = "", string _NameProductEn = "", string orderby = null, bool IsAsceding = false, int pageindex = 1, int pagesize = 20)

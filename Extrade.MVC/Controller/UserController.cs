@@ -42,7 +42,7 @@ namespace Extrade.MVC
         }
 
         [Route("Mvc/AllUsers")]
-        //[Authorize(Roles ="admin")]
+        [Authorize(Roles ="Admin")]
         public IActionResult AllUsers(
                         string? ID = null,
                         string? NameEn = null,
@@ -104,7 +104,7 @@ namespace Extrade.MVC
                 {
                     if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Vendor") { return RedirectToAction("Add", "Vendor"); }
 
-                    else if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "Mvc/AllUsers"); }
+                    else if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "User"); }
 
                  
                 }
