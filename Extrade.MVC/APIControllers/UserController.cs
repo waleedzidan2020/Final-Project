@@ -202,6 +202,7 @@ namespace Extrade.MVC.Controler
             //s.CopyTo(fs);
             //fs.Position = 0;
             obj.Role = "User";
+            obj.Img = "notprived.jpg";
             var result=
             await UserRep.Add(obj);
             if (result.Succeeded)
