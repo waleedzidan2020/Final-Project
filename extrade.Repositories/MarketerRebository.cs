@@ -153,12 +153,13 @@ namespace Extrade.Repositories
             if (how.Succeeded)
             {
                 var userid = UserRepo.GetByEmails(model.Email).Id;
-                return base.Add(new Marketer
+               var res= base.Add(new Marketer
                 {
                     UserID = userid,
                     TaxCard = model.TaxCard,
 
                 }).Entity;
+                return res;
             }
             else
                 return new Marketer();
