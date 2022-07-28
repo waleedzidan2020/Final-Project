@@ -52,6 +52,18 @@ namespace Extrade.MVC.Controler
                 Data = query
             };
         }
+       [Route("ProductDetails")]
+       [HttpGet]
+        public APIViewModel GetProductDetails(int ID)
+        {
+            var data = ProductRep.GetProductByID(ID);
+            return new APIViewModel
+            {
+                Success = true,
+                Massege = "",
+                Data = data
+            };
+        }
         [HttpGet]
         public APIViewModel GetProductWithCollection(List<CollectionDetalisEditViewModel> CollectionDetailsCode)
         {
