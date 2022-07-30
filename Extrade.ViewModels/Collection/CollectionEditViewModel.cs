@@ -19,7 +19,7 @@ namespace Extrade.ViewModels
                 NameAr = model.NameAr,
                 Code=model.Code,
                 MarketerID=model.MarketerID,
-                
+                ID = model.ID,
                 
                 
             };
