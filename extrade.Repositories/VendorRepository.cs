@@ -300,5 +300,31 @@ namespace Extrade.Repositories
             else query.VendorStatus = VendorStatus.accepted;
             return base.Update(query).Entity.ToViewModel();
         }
+        public PaginingViewModel<List<VendorViewModel>> GetAllBrands()
+        {
+            var filterd = PredicateBuilder.New<Vendor>();
+                filterd = filterd.Or(p => p.IsDeleted == false && p.VendorStatus == VendorStatus.accepted);
+
+
+            var query = base.Get(filterd, "UserID", true, 1, 20);
+            var res = query.Select(p => new VendorViewModel()
+            {
+                UserID = p.UserID,
+                BrandNameAr = p.BrandNameAr,
+                BrandNameEr = p.BrandNameEr,
+            });
+
+
+            PaginingViewModel<List<VendorViewModel>> final = new PaginingViewModel<List<VendorViewModel>>()
+            {
+                Count = base.GetList().Count(),
+                PageIndex = 1,
+                PageSize = 20,
+                Data = res.ToList()
+            };
+
+            return final;
+
+        }
     }
 }

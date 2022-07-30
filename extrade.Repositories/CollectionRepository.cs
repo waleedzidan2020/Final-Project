@@ -85,7 +85,20 @@ namespace Extrade.Repositories
             var res = base.GetbyID(filter);
             return res.ToViewModel();
         }
-        [HttpPost]
+        public Collection GetOneByCode(string Code)
+        {
+
+            var filter = PredicateBuilder.New<Collection>();
+            var old = filter;
+            if (Code!=null)
+                filter = filter.Or(p => p.Code == Code);
+            if (filter == old)
+                filter = null;
+
+            var res = base.GetbyID(filter);
+            return res;
+        }
+
         public List<Collection> GetWhereMarketerID([FromBody]string ID)
         {
             var marketer = markrepo.GetOneMarketer(ID);

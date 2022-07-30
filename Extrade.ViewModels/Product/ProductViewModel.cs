@@ -30,7 +30,7 @@ namespace Extrade.ViewModels
                  IsDeleted=model.IsDeleted,
                  Images=model.ProductImages.Select(p=>p.image).ToList(),
                  Category = model.Category.NameEn,
-                 VendorName = model.Vendor.BrandNameEr.ToString(),
+                 VendorName = model.Vendor.User.NameEn,
                  
              };
         }
