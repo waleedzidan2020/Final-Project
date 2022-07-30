@@ -27,7 +27,7 @@ namespace Extrade.MVC
             var data = marketerRebository.GetOne(_id);
             return View(data);
         }
-        [Authorize("Admin") ]
+        //[Authorize("Admin") ]
        [Route("MarketerMVC/Get")]
         public IActionResult Get(string _UserID = null, string _TaxCard = "", float _Salary = 0,
             string _CollectionNameEn = "", string _CollectionNameAr = "", bool IsDeleted = false,
@@ -156,6 +156,17 @@ namespace Extrade.MVC
 
 
             return View(res.Data);
+        }
+
+
+
+        
+        public async Task<IActionResult> SoftDelete(string ID)
+        {
+            await userRepository.Delete(ID);
+            await marketerRebository.Delete(ID);
+            unitOfWork.Submit();
+            return RedirectToAction("Get");
         }
 
         public IActionResult AcceptMarketer(string ID)

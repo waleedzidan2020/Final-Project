@@ -84,7 +84,9 @@ namespace Extrade.Repositories
         {
             var Filtering = PredicateBuilder.New<Product>();
             var oldFiltering = Filtering;
-            
+            if(!string.IsNullOrEmpty(ID))
+                Filtering = Filtering.Or(p => p.VendorID.Contains(ID));
+
             if (!string.IsNullOrEmpty(NameEn))
                 Filtering = Filtering.Or(p => p.NameEn.Contains(NameEn));
             if (!string.IsNullOrEmpty(NameAr))
@@ -110,7 +112,9 @@ namespace Extrade.Repositories
                     Description = p.Description,
                     Category = p.Category.NameEn,
                     VendorName = p.Vendor.User.NameEn,
-                    IsDeleted = p.IsDeleted
+                    IsDeleted = p.IsDeleted,
+                    VendorID=p.Vendor.UserID
+                    
 
 
                 });
@@ -218,6 +222,16 @@ namespace Extrade.Repositories
 
             var query = base.GetByID(filter);
             return query.ToViewModel();
+        }
+        public Product GetProductModelByID(int ID)
+        {
+            var filter = PredicateBuilder.New<Product>();
+            var old = filter;
+            if (ID > 0)
+                filter = filter.Or(p => p.ID == ID);
+
+            var query = base.GetByID(filter);
+            return query;
         }
         public ProductViewModel Add(ProductEditViewModel obj) =>
              base.Add(obj.ToModel()).Entity.ToViewModel();

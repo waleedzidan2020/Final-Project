@@ -41,7 +41,7 @@ namespace Extrade.Repositories
                 filter = filter.Or(p => p.Collections.Any(p => p.NameAr.Contains(_CollectionNameAr)));
             if (filter == oldFiler)
                 filter = null;
-            var query = base.Get(filter, orderby, isAscending, pageIndex, pageSize, "User" ,"Collection");
+            var query = base.Get(filter, orderby, isAscending, pageIndex, pageSize,null);
 
             var Result =
             query.Select(i => new MarketerViewModels()
@@ -56,6 +56,7 @@ namespace Extrade.Repositories
                 Country = i.User.Country,
                 City = i.User.City,
                 Street = i.User.Street,
+                IsDeleted=i.IsDeleted
             });
 
 
@@ -153,12 +154,13 @@ namespace Extrade.Repositories
             if (how.Succeeded)
             {
                 var userid = UserRepo.GetByEmails(model.Email).Id;
-                return base.Add(new Marketer
+               var res= base.Add(new Marketer
                 {
                     UserID = userid,
                     TaxCard = model.TaxCard,
 
                 }).Entity;
+                return res;
             }
             else
                 return new Marketer();
@@ -196,9 +198,41 @@ namespace Extrade.Repositories
 
             var res = base.GetByID(filterd);
 
-            res.IsDeleted = true;
+
+            if (res.IsDeleted == false)
+            {
+                res.IsDeleted = true;
+            }
+            else res.IsDeleted = false;
 
             return res.ToViewModel();
+
+
+        }
+
+
+
+
+
+        public async Task<Marketer> Delete(string id)
+        {
+
+            var filterd = PredicateBuilder.New<Marketer>();
+            var old = filterd;
+
+            filterd = filterd.Or(p => p.UserID == id);
+
+
+            var res = base.GetByID(filterd);
+
+
+            if (res.IsDeleted == false)
+            {
+                res.IsDeleted = true;
+            }
+            else res.IsDeleted = false;
+
+            return res;
 
 
         }

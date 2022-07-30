@@ -112,6 +112,19 @@ namespace Extrade.Repositories
             };
             return result;
         }
+        //public List<int> GettingFromCollectionDetails(List<CollectionDetails> collections)
+        //{
+        //    var AllCollectionDetails = new List<CollectionDetails>();
+        //    for(var i = 0; i < collections.Count; i++)
+        //    {
+                
+        //    }
+                
+        //    result.Add(collections[i].ProductID);
+                    
+            
+        //    return result;
+        //}
         public OrderViewModel Remove(int ID)
         {
             var filter = PredicateBuilder.New<Order>();
