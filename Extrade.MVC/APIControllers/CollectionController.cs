@@ -83,16 +83,17 @@ namespace Extrade.MVC.Controler
         //[Authorize(Roles = "Marketer")]
         [Route("Api/AddCollection")]
         [HttpPost]
-        public APIViewModel Add([FromBody]CollectionEditViewModel model)
+        public async Task< APIViewModel> Add([FromBody]CollectionEditViewModel model)
         {
             var user = UserRepo.GetUserByID(model.MarketerID);
             var mark = MarkRepo.GetOne(model.MarketerID);
+            
             if(mark.Status==MarketerStatus.accebted)
             { 
-                var check = UserMan.GetRolesAsync(user);
-                for (int i = 0; i < check.Result.Count; i++)
+                var check =await UserMan.GetRolesAsync(user);
+                for (int i = 0; i < check.Count; i++)
                 {
-                    if (check.Result[i] == "Marketer")
+                    if (check[i] == "Marketer")
                     {
                         Guid g = Guid.NewGuid();
                         model.Code = g.ToString().Substring(0, 10);
