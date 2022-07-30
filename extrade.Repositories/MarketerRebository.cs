@@ -274,7 +274,28 @@ namespace Extrade.Repositories
             return base.Update(query).Entity.ToViewModel();
         }
 
+        public MarketerViewModels GetOneByCollectionCode(string? code ="")
+        {
+            var filterd = PredicateBuilder.New<Marketer>();
 
+
+            var old = filterd;
+
+            if (!string.IsNullOrEmpty(code))
+                //filterd = filterd.Or(p =>  );
+
+
+            if (old == filterd)
+                filterd = null;
+
+
+            var query = base.GetByID(filterd);
+
+            if (query != null)
+                return query.ToViewModel();
+            else
+                return null;
+        }
     }
 
    

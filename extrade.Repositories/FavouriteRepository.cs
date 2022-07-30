@@ -16,7 +16,7 @@ namespace Extrade.Repositories
         }
 
         public PaginingViewModel<List<FavouriteViewModel>> GetFavourites(
-                        string UserID, 
+                        string UserID = "", 
                         int ID = 0,
                         string OrderBy = "",
                         bool IsAscending = false,
@@ -28,7 +28,9 @@ namespace Extrade.Repositories
                 var oldFiltering = Filtering;
                 if (ID > 0)
                     Filtering = Filtering.Or(p => p.ID == ID);
-                if (oldFiltering == Filtering)
+            if (!string.IsNullOrEmpty(UserID))
+                Filtering = Filtering.Or(p => p.UserID == UserID);
+            if (oldFiltering == Filtering)
                     Filtering = null;
                 var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, null);
 
@@ -52,6 +54,23 @@ namespace Extrade.Repositories
                 return FinalResult;
 
             
+        }
+        public FavouriteViewModel Add(FavouriteViewModel obj)
+        {
+            var added = new Favourite
+            {
+                ID = obj.ID,
+                ProductID = obj.ProductID,
+                UserID = obj.UserID
+            };
+
+            var add= base.Add(added).Entity;
+            return new FavouriteViewModel
+            {
+                ID = add.ID,
+                ProductID = add.ProductID,
+                UserID = add.UserID
+            };
         }
         public new Favourite Add(Favourite obj) {
             var query = base.GetList().Select(p => new Favourite
