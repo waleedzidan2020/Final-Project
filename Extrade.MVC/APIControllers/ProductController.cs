@@ -10,19 +10,22 @@ namespace Extrade.MVC.Controler
     public class ProductController : ControllerBase
     {
         private readonly ProductRepository ProductRep;
+        private readonly VendorRepository vendorRep;
         private readonly UnitOfWork unitOfWork;
-        public ProductController(ProductRepository ProductRep, UnitOfWork unitOfWork)
+        public ProductController(ProductRepository ProductRep, UnitOfWork unitOfWork, VendorRepository vendorRepository)
         {
             this.ProductRep= ProductRep;
             this.unitOfWork = unitOfWork;
+            this.vendorRep= vendorRepository;
         }
        
         //[Authorize(Roles ="User")]
         [Route("Api/Getproduct")]
         [HttpGet]
         public APIViewModel GetForUsers(
-                        int categoryID=1,
-                        string? NameEn = null,
+                        int categoryID=0,
+                        string vendorID="",
+                     string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
                         string? CategoryName = null,
@@ -35,6 +38,7 @@ namespace Extrade.MVC.Controler
             var query =
                 ProductRep.GetProductForUsers(
                         categoryID,
+                        vendorID,
                          NameEn,
                          NameAr,
                         Price,
@@ -52,7 +56,23 @@ namespace Extrade.MVC.Controler
                 Data = query
             };
         }
-       [Route("ProductDetails")]
+        [Route("Api/GetBrands")]
+        public APIViewModel GetAllBrands()
+        {
+            var data = vendorRep.GetAllBrands();
+
+            return new APIViewModel
+            {
+                Success = true,
+                Massege = "",
+                Data = data.Data
+            };
+
+
+
+        }
+
+        [Route("ProductDetails")]
        [HttpGet]
         public APIViewModel GetProductDetails(int ID)
         {
