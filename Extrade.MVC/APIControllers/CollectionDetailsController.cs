@@ -24,10 +24,10 @@ namespace Extrade.MVC.Controler
 
             var data =
             CollectionDetailsRepo.GetList().Where(p=>p.CollectionID== CollectionID).ToList();
-            List<Product> Prod= new List<Product>();
+            List<ProductViewModel> Prod= new List<ProductViewModel>();
             for (int i= 0; i < data.Count(); i++)
             {
-                Prod.Add(ProdRepo.GetList().Where(p=>p.ID== data[i].ProductID).FirstOrDefault());
+                Prod.Add(ProdRepo.GetList().Where(p=>p.ID== data[i].ProductID).FirstOrDefault().ToViewModel());
             }
                 
                 
@@ -50,7 +50,36 @@ namespace Extrade.MVC.Controler
             };
             //return View("Get", Data);
         }
-        
+        [HttpPost]
+        public APIViewModel AddAPI([FromBody] List<CollectionDetalisEditViewModel> model)
+        {
+            try
+            {
+
+                foreach (var i in model)
+                {
+                    CollectionDetailsRepo.Add(i);
+                }
+                UnitOfWork.Submit();
+
+                return new APIViewModel
+                {
+                    Data = null,
+                    Success = true,
+                    Massege = "Added"
+                };
+            }
+            catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Data = e.ToString(),
+                    Success = false,
+                    Massege = "error"
+                };
+            }
+        }
+
         [HttpPost]
         public IActionResult Add([FromBody]List<CollectionDetalisEditViewModel> model)
         {

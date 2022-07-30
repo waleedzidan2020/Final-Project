@@ -22,7 +22,7 @@ namespace Extrade.Repositories
 
            : base(_Contex)
         { markrepo = _markrepo; }
-        public PaginingViewModel<List<CollectionViewModel>> Get(string id,string NameAr = "", 
+        public PaginingViewModel<List<CollectionViewModel>> Get(string UserId ="",string NameAr = "", 
             string? NameEN = "", string Namepenroduct = "", 
             string Namearproduct = "",string Description="", float Price = 0,
             int Quantity = 0, ProductStatus? Status = null,
@@ -34,6 +34,8 @@ namespace Extrade.Repositories
             var old = filter;
             if (!string.IsNullOrEmpty(NameAr))
                 filter = filter.Or(p => p.NameAr.Contains(NameAr));
+            if (!string.IsNullOrEmpty(UserId))
+                filter = filter.Or(p => p.MarketerID == UserId);
             if (!string.IsNullOrEmpty(NameEN))
                 filter = filter.Or(p => p.NameEN.Contains(NameEN));
             if (!string.IsNullOrEmpty(Namepenroduct))
@@ -57,12 +59,12 @@ namespace Extrade.Repositories
                 NameEN = p.NameEN,
                 Code=p.Code,
                 ID=p.ID,
-            }).Where(p => p.MarketerID == id);
+            }).Where(p => p.MarketerID == UserId);
 
             PaginingViewModel<List<CollectionViewModel>> finalResult = new PaginingViewModel<List<CollectionViewModel>>() {
 
                 Count = base.GetList().Count(),
-                Data = Result.Where(p=>p.MarketerID==id).ToList(),
+                Data = Result.Where(p=>p.MarketerID==UserId).ToList(),
                 PageIndex= pageindex,
                 PageSize= pagesize
 
@@ -99,7 +101,7 @@ namespace Extrade.Repositories
             return res;
         }
 
-        public List<Collection> GetWhereMarketerID([FromBody]string ID)
+        public List<Collection> GetWhereMarketerID(string ID)
         {
             var marketer = markrepo.GetOneMarketer(ID);
             var query = base.GetList().Select(p => new Collection

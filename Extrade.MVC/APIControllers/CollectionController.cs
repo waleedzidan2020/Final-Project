@@ -30,12 +30,11 @@ namespace Extrade.MVC.Controler
         public APIViewModel Get(string NameAr = "", string? NameEN = "",
             string Namepenroduct = "", string Namearproduct = "",
             string Description = "", float Price = 0, int Quantity = 0, ProductStatus? Status = null,
-                string? orderby = null,
+                string? orderby = null,string UserId = "",
            bool IsAsceding = false, int pageindex = 1, int pagesize = 20)
         {
-            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var data =
-           CollectionRepo.Get(id,NameAr, NameEN,
+           CollectionRepo.Get(UserId,NameAr, NameEN,
            Namepenroduct, Namearproduct, Description, Price, Quantity, Status, orderby,
                IsAsceding, pageindex, pagesize);
             return new APIViewModel
@@ -51,7 +50,7 @@ namespace Extrade.MVC.Controler
         [Route("Api/GetCollection")]
         //[Authorize(Roles = "Marketer")]
         [HttpGet]
-        public APIViewModel GetWhereMarketerID([FromHeader]string id)
+        public APIViewModel GetWhereMarketerID(string id)
         {
            
            var result = CollectionRepo.GetWhereMarketerID(id);
@@ -99,15 +98,15 @@ namespace Extrade.MVC.Controler
                         model.Code = g.ToString().Substring(0, 10);
                         model.MarketerID = model.MarketerID;
                         CollectionRepo.Add(model);
-                        //var all = CollectionRepo.GetWhereMarketerID(user.Id);
                         UnitOfWork.Submit();
 
+                        var data = CollectionRepo.GetOneByCode(model.Code);
                         return new APIViewModel
                         {
 
                             Massege = "Done Added",
                             Success = true,
-                            Data = null,
+                            Data = data,
                             url = "Api/GetCollection"
 
                         };
@@ -125,7 +124,17 @@ namespace Extrade.MVC.Controler
             };
             
         }
+        public APIViewModel GetDetails(int ID)
+        {
+            var result = CollectionRepo.GetOne(ID);
 
+            return new APIViewModel
+            {
+                Data = result,
+                Success = true,
+                Massege = "get"
+            };
+        }
         public IActionResult ProductWithCollection(int ID)
         {
             var result = CollectionRepo.GetOne(ID);
@@ -154,6 +163,29 @@ namespace Extrade.MVC.Controler
 
 
 
+        [HttpPost]
+        public APIViewModel Delete([FromBody] CollectionEditViewModel obj)
+        {
+            try
+            {
+                CollectionRepo.Delete(obj);
+                UnitOfWork.Submit();
+                return new APIViewModel
+                {
+                    Success = true,
+                    Massege = "",
+                    Data = null
+                };
+            }catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Success = false,
+                    Massege = "",
+                    Data = e.ToString()     
+                };
+            }
+        }
 
 
         //public IActionResult Remove()
@@ -166,7 +198,7 @@ namespace Extrade.MVC.Controler
         //    return 0;
         //}
 
-    
-}
+
+    }
 }
 

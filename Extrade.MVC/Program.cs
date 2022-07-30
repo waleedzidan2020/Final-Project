@@ -72,6 +72,7 @@ namespace Extrade.MVC
             builder.Services.AddScoped(typeof(OrderDetailsRepositoty));
             builder.Services.AddScoped(typeof(RoleRepository));
             builder.Services.AddScoped(typeof(PaymentRepository));
+            builder.Services.AddScoped(typeof(CollectionDetailsRepository));
 
             builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaims>();
 
