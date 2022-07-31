@@ -71,11 +71,13 @@ namespace Extrade.MVC.Controler
         [HttpPost]
         public IActionResult Add(OrderEditViewModel order)
         {
-            var LoginAccount = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            order.UserID = LoginAccount;
+            //var LoginAccount = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //order.UserID = LoginAccount;
+            Random rand = new Random();
+            order.DriverID = rand.Next(1,3);
             var Insert = repo.Add(order);
             var odlist = new List<OrderDetailsEditViewModel>();
-            var carts = Cartrepo.GetList().Where(i => i.UserID == LoginAccount).ToList();
+            var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
             foreach(var i in carts)
             {
                 var prod = ProdRepo.GetProductByID(i.ProductID);

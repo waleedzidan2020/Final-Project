@@ -44,45 +44,45 @@ namespace Extrade.MVC.Controler
 
 
        
-        [HttpPost]
-        public APIViewModel Add(OrderViewModel order)
-        {
+        //[HttpPost]
+        //public APIViewModel Add(OrderViewModel order)
+        //{
             
-            var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = userrepo.GetUserByID(userID);
-            var carts = Cartrepo.GetList().Where(i => i.UserID == userID).ToList();
-            var pro=carts.Select(p=>p.Product.Quantity).ToList();
-            for (int x = 0; x < pro.Count; x++) { 
-                if (pro[x] > 0) { 
-            List<OrderDetailsEditViewModel>? orderDetail = new List<OrderDetailsEditViewModel>();
-            for(int i = 0; i < carts.Count; i++) {
-                orderDetail.Add( new OrderDetailsEditViewModel
-            {
-                OrderID=order.ID,
-                ProductID = carts[i].ProductID,
-                ProductQuantity=carts[i].Quantity,
-                SubPrice = carts[i].Product.Price * carts[i].Quantity,
-            });
-            };
-            var result = repo.Add(orderDetail);
+        //    var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var user = userrepo.GetUserByID(userID);
+        //    var carts = Cartrepo.GetList().Where(i => i.UserID == userID).ToList();
+        //    var pro=carts.Select(p=>p.Product.Quantity).ToList();
+        //    for (int x = 0; x < pro.Count; x++) { 
+        //        if (pro[x] > 0) { 
+        //    List<OrderDetailsEditViewModel>? orderDetail = new List<OrderDetailsEditViewModel>();
+        //    for(int i = 0; i < carts.Count; i++) {
+        //        orderDetail.Add( new OrderDetailsEditViewModel
+        //    {
+        //        OrderID=order.ID,
+        //        ProductID = carts[i].ProductID,
+        //        ProductQuantity=carts[i].Quantity,
+        //        SubPrice = carts[i].Product.Price * carts[i].Quantity,
+        //    });
+        //    };
+        //    var result = repo.Add(orderDetail);
             
-            unitOfWork.Submit();
-            return new APIViewModel
-            {
-                Success = true,
-                Massege = "Done",
-                Data = result
-            };
-            }
-            };
-            return new APIViewModel
-            {
-                Massege = "Sorry Quantity not enough",
-                Data = null,
-                Success = false,
+        //    unitOfWork.Submit();
+        //    return new APIViewModel
+        //    {
+        //        Success = true,
+        //        Massege = "Done",
+        //        Data = result
+        //    };
+        //    }
+        //    };
+        //    return new APIViewModel
+        //    {
+        //        Massege = "Sorry Quantity not enough",
+        //        Data = null,
+        //        Success = false,
 
-            };
-        }
+        //    };
+        //}
             
              
 
