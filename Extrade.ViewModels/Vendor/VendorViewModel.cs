@@ -19,8 +19,8 @@ namespace Extrade.ViewModels
                 VendorImage = model.VendorImage.Select(p => p.Image).ToList(),
                 IsDeleted   =model.IsDeleted,
                 Balance=model.Balance,
-                
-                
+                UserID=model.UserID,    
+                Status = VendorStatus.accepted                
 
 
 

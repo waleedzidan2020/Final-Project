@@ -14,13 +14,16 @@ namespace Extrade.Repositories
     {
 
         public readonly UserRepository UserRepo;
+        public readonly CollectionRepository CollRepo;
+
         public readonly UnitOfWork unit;
         public readonly UserManager<User> UserMan;
-        public MarketerRebository(UserManager<User> _UserMan,UserRepository _UserRepo,ExtradeContext _DBContext,UnitOfWork _unit) : base(_DBContext)
+        public MarketerRebository(UserManager<User> _UserMan, CollectionRepository CollRepo,UserRepository _UserRepo,ExtradeContext _DBContext,UnitOfWork _unit) : base(_DBContext)
         {
             unit = _unit;
             UserMan = _UserMan;
             UserRepo = _UserRepo;
+            this.CollRepo = CollRepo;
         }
         public PaginingViewModel<List<MarketerViewModels>> Get( string _UserID = null, string _TaxCard = "",
             float _Salary=0,string _CollectionNameEn = "",string _CollectionNameAr = "", 
@@ -274,7 +277,27 @@ namespace Extrade.Repositories
             return base.Update(query).Entity.ToViewModel();
         }
 
+        public MarketerViewModels GetOneByCollection(int id =0)
+        {
+            var collection = new CollectionViewModel();
+            if (id >0)
+            {
+               collection = CollRepo.GetOne(id);
+            }
+            var filterd = PredicateBuilder.New<Marketer>();
+            var old = filterd;
+            filterd = filterd.Or(p => p.UserID == collection.MarketerID);
 
+            if (old == filterd)
+                filterd = null;
+
+            var query = base.GetByID(filterd);
+
+            if (query != null)
+                return query.ToViewModel();
+            else
+                return null;
+        }
     }
 
    

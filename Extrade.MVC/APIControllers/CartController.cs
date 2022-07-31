@@ -9,19 +9,22 @@ namespace Extrade.MVC.APIControllers
     {
         private readonly CartRepository CartRepo;
         private readonly UnitOfWork UnitOfWork;
-        public CartController(CartRepository _CartRepo,UnitOfWork unitOfWork)
+        private readonly ProductRepository productRepo;
+
+        public CartController(CartRepository _CartRepo, UnitOfWork unitOfWork, ProductRepository productrepo)
         {
-            CartRepo= _CartRepo;
-            UnitOfWork= unitOfWork;
+            CartRepo = _CartRepo;
+            UnitOfWork = unitOfWork;
+            productRepo = productrepo;
         }
         public IActionResult Index()
         {
             return null;
         }
         [HttpGet]
-        public APIViewModel Get()
+        public APIViewModel Get(string UserID = "")
         {
-            var result = CartRepo.Get(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = CartRepo.Get(UserID);
             return new APIViewModel
             {
                 Success = true,
@@ -30,9 +33,8 @@ namespace Extrade.MVC.APIControllers
             };
         }
         [HttpPost]
-        public APIViewModel Add(CartEditViewModel Cart)
+        public APIViewModel Add([FromBody] CartEditViewModel Cart)
         {
-            Cart.UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = CartRepo.Add(Cart);
             UnitOfWork.Submit();
             return new APIViewModel
@@ -43,22 +45,36 @@ namespace Extrade.MVC.APIControllers
             };
         }
         [HttpPost]
-        public APIViewModel Update(CartEditViewModel obj)
+        public APIViewModel Update([FromBody] CartEditViewModel obj)
         {
-            
-            var Result = CartRepo.Update(obj);
-            UnitOfWork.Submit();
-            return new APIViewModel
+
+            var prod = productRepo.GetProductByID(obj.ProductID);
+            if(prod.Quantity > obj.Quantity )
             {
-                Success = true,
-                Massege = "Update Done Successfully",
-                Data = Result
-            };
+                var Result = CartRepo.Update(obj);
+                UnitOfWork.Submit();
+                return new APIViewModel
+                {
+                    Success = true,
+                    Massege = "Update Done Successfully",
+                    Data = Result
+                };
+            }
+            else
+            {
+                return new APIViewModel
+                {
+                    Success = false,
+                    Massege = "OUT OF STOCK",
+                    Data = null
+                };
+            }
         }
-        [HttpPost]
+      
         public APIViewModel Remove(int ID)
         {
-            var result = CartRepo.Remove(ID);
+            var data=CartRepo.GetByID(ID);
+            CartRepo.Remove(data);
             UnitOfWork.Submit();
             return new APIViewModel
             {

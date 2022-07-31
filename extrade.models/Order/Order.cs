@@ -17,7 +17,7 @@ namespace extrade.models
     {
         public int ID { get; set; }
         public string UserID { get; set; }
-        public int DriverID { get; set; }
+        public int? DriverID { get; set; }
         public DateTime? ArrivalDate { get; set; }
         public DateTime? ShippingDate { get; set; }
         public OrderStatus OrderStatus { get; set; }

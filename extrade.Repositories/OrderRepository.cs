@@ -61,7 +61,35 @@ namespace Extrade.Repositories
             return final;
 
         }
+        public OrderViewModel GetlastOrder(string UserID = "",OrderStatus status = OrderStatus.pending, float TotalPrice = 0, string orderby = "ID", bool IsAsceding = false)
+        {
 
+            var filterd = PredicateBuilder.New<Order>();
+            var old = filterd;
+
+            if (!string.IsNullOrEmpty(UserID))
+                filterd = filterd.Or(i => i.UserID == UserID);
+            if (status != OrderStatus.pending)
+                filterd = filterd.Or(i => i.OrderStatus == status);
+
+            if (TotalPrice > 0)
+                filterd = filterd.Or(p => p.TotalPrice == TotalPrice);
+
+            if (old == filterd)
+                filterd = null;
+
+            var query = base.Get(filterd, orderby, IsAsceding, 1, 20, null);
+            var res = query.Select(p => new OrderViewModel()
+            {
+                ID = p.ID,
+                OrderDetails = p.OrderDetails.Select(p => p.Quantity).ToList(),
+                TotalPrice = p.TotalPrice,
+                status = p.OrderStatus,
+            }).FirstOrDefault();
+
+            return res;
+
+        }
 
         public Order GetOrderByID(int ID)
         {

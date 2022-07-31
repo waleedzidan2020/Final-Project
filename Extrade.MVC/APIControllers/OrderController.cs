@@ -69,6 +69,49 @@ namespace Extrade.MVC.Controler
             };
         }
         [HttpPost]
+        public APIViewModel AddApi([FromBody] OrderEditViewModel order)
+        {
+            try
+            {
+                order.DriverID = null;
+                var Insert = repo.Add(order);
+                UnitOfWork.Submit();
+                var lastOrder = repo.GetlastOrder(order.UserID,OrderStatus.pending, 0, "ID", false);
+                var odlist = new List<OrderDetailsEditViewModel>();
+                var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
+                foreach (var i in carts)
+                {
+                    var prod = ProdRepo.GetProductByID(i.ProductID);
+                    var oneod = new OrderDetailsEditViewModel()
+                    {
+                        OrderID = lastOrder.ID,
+                        ProductID = prod.ID,
+                        ProductQuantity = i.Quantity,
+                        SubPrice = prod.Price * i.Quantity,
+                    };
+                    odlist.Add(oneod);
+                }
+
+                var orderdetails = detailsrepo.Add(odlist);
+                UnitOfWork.Submit();
+                return new APIViewModel
+                {
+                    Massege = "added",
+                    Success = true,
+                    Data = null,
+                };
+            }catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Massege = "Error",
+                    Success = false,
+                    Data = null,
+                };
+            }
+
+        }
+        [HttpPost]
         public IActionResult Add(OrderEditViewModel order)
         {
             //var LoginAccount = User.FindFirstValue(ClaimTypes.NameIdentifier);
