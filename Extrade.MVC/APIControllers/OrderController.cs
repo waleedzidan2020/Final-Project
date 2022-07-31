@@ -69,13 +69,14 @@ namespace Extrade.MVC.Controler
             };
         }
         [HttpPost]
-        public APIViewModel AddApi(OrderEditViewModel order)
+        public APIViewModel AddApi([FromBody] OrderEditViewModel order)
         {
             try
             {
-
-
+                order.DriverID = null;
                 var Insert = repo.Add(order);
+                UnitOfWork.Submit();
+                var lastOrder = repo.GetlastOrder(order.UserID,OrderStatus.pending, 0, "ID", false);
                 var odlist = new List<OrderDetailsEditViewModel>();
                 var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
                 foreach (var i in carts)
@@ -83,7 +84,7 @@ namespace Extrade.MVC.Controler
                     var prod = ProdRepo.GetProductByID(i.ProductID);
                     var oneod = new OrderDetailsEditViewModel()
                     {
-                        OrderID = Insert.ID,
+                        OrderID = lastOrder.ID,
                         ProductID = prod.ID,
                         ProductQuantity = i.Quantity,
                         SubPrice = prod.Price * i.Quantity,

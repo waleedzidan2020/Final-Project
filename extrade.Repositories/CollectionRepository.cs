@@ -17,11 +17,10 @@ namespace Extrade.Repositories
 {
     public class CollectionRepository : GeneralRepositories<Collection>
     {
-        private readonly MarketerRebository markrepo;
-        public CollectionRepository(ExtradeContext _Contex,MarketerRebository _markrepo)
+        public CollectionRepository(ExtradeContext _Contex)
 
            : base(_Contex)
-        { markrepo = _markrepo; }
+        {}
         public PaginingViewModel<List<CollectionViewModel>> Get(string UserId ="",string NameAr = "", 
             string? NameEN = "", string Namepenroduct = "", 
             string Namearproduct = "",string Description="", float Price = 0,
@@ -103,16 +102,15 @@ namespace Extrade.Repositories
 
         public List<Collection> GetWhereMarketerID(string ID)
         {
-            var marketer = markrepo.GetOneMarketer(ID);
+            
             var query = base.GetList().Select(p => new Collection
             {
                 ID=p.ID,
-
                 MarketerID = p.MarketerID,
                 NameEN = p.NameEN,
                 NameAr=p.NameAr,
                 Code = p.Code
-            }).Where(p => p.MarketerID == marketer.UserID);
+            }).Where(p => p.MarketerID == ID);
             return query.ToList();
         }
         public IPagedList<CollectionViewModel>Search(int pageindex = 1, int pagesize = 20)

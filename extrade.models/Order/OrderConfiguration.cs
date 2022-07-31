@@ -16,12 +16,12 @@ namespace extrade.models
             builder.HasKey(p => p.ID);
             builder.Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
             builder.Property(p => p.UserID).IsRequired();
-            builder.Property(p => p.DriverID);
+            builder.Property(p => p.DriverID).IsRequired(false);
             builder.Property(p => p.OrderStatus).HasDefaultValue(OrderStatus.pending);
             builder.Property(p => p.ModifiedDate).HasColumnType("date default getdate()");
             builder.Property(p => p.IsDeleted).HasDefaultValue(false);
-            builder.Property(p => p.ArrivalDate);
-            builder.Property(p => p.ShippingDate);
+            builder.Property(p => p.ArrivalDate).IsRequired(false);
+            builder.Property(p => p.ShippingDate).IsRequired(false);
             builder.Property(p => p.TotalPrice).HasDefaultValue(0);
 
 

@@ -49,7 +49,7 @@ namespace Extrade.MVC.APIControllers
         {
 
             var prod = productRepo.GetProductByID(obj.ProductID);
-            if(prod.Quantity > 0)
+            if(prod.Quantity > obj.Quantity )
             {
                 var Result = CartRepo.Update(obj);
                 UnitOfWork.Submit();

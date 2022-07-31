@@ -10,10 +10,12 @@ namespace Extrade.MVC.APIControllers
     {
         private readonly UnitOfWork unitOfWork;
         private readonly FavouriteRepository FavRepo;
-        public FavouriteController(UnitOfWork _unitOfWork,FavouriteRepository _FavRepo)
+        private readonly ProductRepository productRepo;
+        public FavouriteController(UnitOfWork _unitOfWork,FavouriteRepository _FavRepo, ProductRepository productrepo)
         {
             unitOfWork = _unitOfWork;
             FavRepo = _FavRepo;
+            productRepo = productrepo;
         }
 
 
@@ -36,9 +38,9 @@ namespace Extrade.MVC.APIControllers
             };
         }
         [HttpPost]
-        public APIViewModel Add([FromBody] Favourite obj)
+        public APIViewModel Add([FromBody] Favourite fav)
         {
-            FavRepo.Add(obj);
+            FavRepo.Add(fav);
             unitOfWork.Submit();
             return new APIViewModel
             {
@@ -47,8 +49,10 @@ namespace Extrade.MVC.APIControllers
                 Data = null
             };
         }
+        [HttpPost]
         public APIViewModel Remove(int ID)
         {
+
             FavRepo.Remove(ID);
             unitOfWork.Submit();
             return new APIViewModel

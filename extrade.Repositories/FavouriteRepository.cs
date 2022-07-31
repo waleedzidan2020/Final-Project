@@ -39,7 +39,13 @@ namespace Extrade.Repositories
                     {
                         ID = p.ID,
                         ProductID=p.ProductID,
-                        UserID=p.UserID
+                        NameEn=p.Product.NameEn,
+                        NameAr=p.Product.NameAr,
+                        image=p.Product.ProductImages.FirstOrDefault().image??"",
+                        Description=p.Product.Description,
+                        Price=p.Product.Price,
+                        
+                        UserID =p.UserID
                     }).Where(p=>p.UserID==UserID);
 
                 PaginingViewModel<List<FavouriteViewModel>>
@@ -73,12 +79,8 @@ namespace Extrade.Repositories
             };
         }
         public new Favourite Add(Favourite obj) {
-            var query = base.GetList().Select(p => new Favourite
-            {
-                ProductID = obj.ProductID,
-                UserID = obj.UserID
-            }).Where(f => f.ProductID == obj.ProductID && f.UserID == obj.UserID);
-            if (query == null)
+            var query = base.GetList().Where(f => f.ProductID == obj.ProductID && f.UserID == obj.UserID);
+            if (query.Count() <= 0)
             {
                 return base.Add(obj).Entity;
             }

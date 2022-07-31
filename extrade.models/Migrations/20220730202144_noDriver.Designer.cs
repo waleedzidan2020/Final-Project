@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using extrade.models;
 
@@ -11,9 +12,10 @@ using extrade.models;
 namespace extrade.models.Migrations
 {
     [DbContext(typeof(ExtradeContext))]
-    partial class ExtradeContextModelSnapshot : ModelSnapshot
+    [Migration("20220730202144_noDriver")]
+    partial class noDriver
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

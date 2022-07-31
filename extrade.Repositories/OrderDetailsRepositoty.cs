@@ -69,41 +69,48 @@ namespace Extrade.Repositories
         public List<OrderDetails> AddForCollection(List<CollectionDetails> CollectionDetails
             ,OrderViewModel order)
         {
-            var Paymentacc = new AllPayment();
-            var result = new List<OrderDetails>();
-            var OrderModel = orderRepository.GetOrderByID(order.ID);
-            for(var i=0;i<CollectionDetails.Count;i++)
+            try
             {
-                var query = ProdRepo.GetProductModelByID(CollectionDetails[i].ProductID);
-                var od = new OrderDetails()
+
+                var Paymentacc = new AllPayment();
+                var result = new List<OrderDetails>();
+                var OrderModel = orderRepository.GetOrderByID(order.ID);
+                for (var i = 0; i < CollectionDetails.Count; i++)
                 {
-                    ProductId = query.ID,
-                    Quantity = 1,
-                    SubPrice = 1 * query.Price,
-                    OrderId = OrderModel.ID
-                };
-                base.Add(od).Entity.ToViewModel();
-                result.Add(od);
-                
-                var VendorID = VendorRepository.GetVendorbyProductID(query.ID);
-                var vendor = VendorRepository.GetOne(VendorID);
-                var marketer = marketerRepository.GetOneByCollectionCode(order.CollectionCode);
-                order.TotalPrice += od.SubPrice;
-                var updatingTotalPrice = orderRepository.Update(OrderModel).Entity;
+                    var query = ProdRepo.GetProductModelByID(CollectionDetails[i].ProductID);
+                    var od = new OrderDetails()
+                    {
+                        ProductId = query.ID,
+                        Quantity = 1,
+                        SubPrice = 1 * query.Price,
+                        OrderId = OrderModel.ID
+                    };
+                    base.Add(od).Entity.ToViewModel();
+                    result.Add(od);
 
-                //vendor.Balance += (od.SubPrice * (10 / 100));
-                vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
-                var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
+                    var VendorID = VendorRepository.GetVendorbyProductID(query.ID);
+                    var vendor = VendorRepository.GetOne(VendorID);
+                    var marketer = marketerRepository.GetOneByCollection(CollectionDetails[i].CollectionID);
+                    order.TotalPrice += od.SubPrice;
+                    var updatingTotalPrice = orderRepository.Update(OrderModel).Entity;
 
-                Paymentacc.Balance += od.SubPrice - ((95 / 100) * od.SubPrice);
-                var payment = PaymentRepo.Add(Paymentacc).Entity;
+                    //vendor.Balance += (od.SubPrice * (10 / 100));
+                    vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
+                    var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
 
-                marketer.Salary += od.SubPrice - ((95 / 100) * od.SubPrice);
-                var markterBalance = marketerRepository.Update(marketer.ToEditViewModel().ToModel()).Entity;
+                    Paymentacc.Balance += od.SubPrice - ((95 / 100) * od.SubPrice);
+                    var payment = PaymentRepo.Add(Paymentacc).Entity;
+
+                    marketer.Salary += od.SubPrice - ((95 / 100) * od.SubPrice);
+                    var markterBalance = marketerRepository.Update(marketer.ToEditViewModel().ToModel()).Entity;
+                }
+
+                return result;
             }
-
-            return result;
-
+            catch (Exception ex)
+            {
+                return null;
+            }
 
             //for (int i = 0; i < CollectionDetails.Count; i++)
             //{

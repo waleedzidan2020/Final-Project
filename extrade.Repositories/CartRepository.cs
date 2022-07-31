@@ -65,13 +65,13 @@ namespace Extrade.Repositories
             base.Add(obj.ToModel()).Entity.ToViewModel();
         public CartViewModel Update(CartEditViewModel obj)
         {
+            var filter = PredicateBuilder.New<Cart>();
+            filter = filter.Or(c => c.ID == obj.ID);
+            var query = base.GetByID(filter);
 
-            //var result= GetByID(obj.ID);
-            Cart cart = obj.ToModel();
-            //result.Quantity = obj.Quantity;
-            //result.ProductID = obj.ProductID;
+            query.Quantity = obj.Quantity;;
 
-            return base.Update(cart).Entity.ToViewModel();
+            return base.Update(query).Entity.ToViewModel();
         }
         
         public CartViewModel Remove(CartViewModel obj)
