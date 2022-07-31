@@ -53,7 +53,8 @@ namespace Extrade.Repositories
 
         public IQueryable<T> GetList()
         {
-            return set.AsQueryable();
+          var query= set.AsQueryable();
+            return query;
         }
 
 

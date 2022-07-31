@@ -71,6 +71,7 @@ namespace Extrade.MVC.Controler
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
+        [Route("Api/UpdateCaterory")]
         public APIViewModel Update(int Id)
         {
             var res=  repo.GetOne(Id);

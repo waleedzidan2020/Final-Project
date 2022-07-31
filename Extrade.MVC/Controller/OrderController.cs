@@ -2,6 +2,7 @@
 using Extrade.Repositories;
 using extrade.models;
 using Extrade.ViewModels;
+using System.Security.Claims;
 
 namespace Extrade.MVC
 {
@@ -9,13 +10,15 @@ namespace Extrade.MVC
     {
         private readonly OrderRepository repo;
         private readonly UnitOfWork UnitOfWork;
+        private readonly OrderDetailsRepositoty repos;
 
 
-        public OrderController(OrderRepository repo, UnitOfWork UnitOfWork)
+        public OrderController(OrderRepository repo, UnitOfWork UnitOfWork, OrderDetailsRepositoty repos)
         {
 
             this.repo = repo;
             this.UnitOfWork = UnitOfWork;
+            this.repos = repos;
 
 
 
@@ -37,6 +40,17 @@ namespace Extrade.MVC
 
             repo.Remove(id);
             UnitOfWork.Submit();
+
+        }
+         [HttpGet]
+
+        [Route("Mvc/GetOrderDetails")]
+        public IActionResult GetOrderDetails()
+        {
+            ViewBag.userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var data = repos.GetListForOrderDetails();
+            return View(data);
+
 
         }
     }

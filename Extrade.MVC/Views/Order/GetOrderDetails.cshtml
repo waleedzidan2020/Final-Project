@@ -1,0 +1,64 @@
+﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@using Extrade.ViewModels;
+@model List<OrderDetailsViewModel>
+
+
+@{
+    Layout = "_VendorLayout"; 
+}
+
+  <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                DataTable Example
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                              <th scope="col">OrderID</th>
+                                              <th scope="col">ProductID</th>
+                                                  <th scope="col">UserName</th>
+                                                    <th scope="col">PhoneNumbers</th>
+                                              <th scope="col">productNameAr</th>
+                                              <th scope="col">productNameEn</th>
+                                              <th scope="col">TotalPrice</th>
+                                             
+                                             
+
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+      @foreach(var order in Model){
+          if(order.VendorId==ViewBag.userid){
+    <tr>
+      
+      <td>@order.OrderID</td>
+      <td>@order.ProductID</td>
+       <td>@order.NameEn</td>
+            
+      <td><select>@foreach(var i in @order.PhoneNumber)
+                    {
+                        <option>@i.Number</option>
+                    }</select>
+      </td>
+         
+       <td>@order.productNameAr</td>
+        <td>@order.productNameEn</td>
+          <td>@order.TotalPrice</td>
+         
+          
+         
+      
+    
+    </tr>
+          }
+    }
+    
+
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>

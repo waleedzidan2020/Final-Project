@@ -42,8 +42,14 @@ namespace Extrade.MVC.Controler
                 };
         }
 
+        //public IActionResult GetList()
+        //{
+        //    var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var data = repo.GetList().Where(p=>p.product.VendorID==userid);
 
-       
+          
+        //}
+
         [HttpPost]
         public APIViewModel Add(OrderViewModel order)
         {

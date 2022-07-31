@@ -37,7 +37,54 @@ namespace Extrade.Repositories
             }).Where(p=>p.OrderID == OrderID);
             return res.ToList();
         }
-        
+
+
+
+
+        public List<OrderDetailsViewModel> GetList()
+        {
+
+
+            var query = base.GetList();
+            var res = query.Select(p => new OrderDetailsViewModel()
+            {
+                SubPrice = p.SubPrice,
+                ProductQuantity = p.Product.Quantity,
+                OrderID = p.OrderId,
+                TotalPrice = p.Order.TotalPrice,
+            });
+            return res.ToList();
+        }
+
+
+
+        public List<OrderDetailsViewModel> GetListForOrderDetails()
+        {
+            
+
+            var query = base.GetList();
+            var res = query.Select(p => new OrderDetailsViewModel()
+            {
+                SubPrice = p.SubPrice,
+                ProductQuantity = p.Product.Quantity,
+                OrderID = p.OrderId,
+                ProductID = p.ProductId,
+                productNameAr = p.Product.NameAr,
+                productNameEn = p.Product.NameEn,
+                TotalPrice = p.Order.TotalPrice,
+                VendorId = p.Product.VendorID,
+                PhoneNumber = p.Order.User.PhoneNumber,
+                NameEn=p.Order.User.NameEn
+                 
+
+
+
+
+
+            }) ;
+            return res.ToList();
+        }
+
         public List<OrderDetails> Add(List<OrderDetailsEditViewModel> OrderDetails)
         {
             var Paymentacc = new AllPayment();

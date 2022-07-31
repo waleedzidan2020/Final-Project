@@ -3,54 +3,95 @@
 
 
 
-<form asp-action="Create" asp-controller="UseAsVendor" method="post" enctype="multipart/form-data">
-    <div>
-        <label for="NameEnglish">Name English : </label>
-        <input type="text" name="NameEn" id="NameEnglish"/>
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   <link href="~/LoginAndRegister.css" rel="stylesheet" />
+    <title>Register</title>
+</head>
+<body>
+<section class="  bg-image"
+  style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+  <div class=" mask d-flex align-items-center overflow-hidden  gradient-custom-3">
+    <div class="container  ">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card  "  style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-4">Create an account</h2>
+
+              <form asp-action="Create" asp-controller="UseAsVendor" method="post" enctype="multipart/form-data">
+       <div class="form-outline mb-2">
+            <label for="NameEnglish">Name English </label>
+            <input type="text" name="NameEn" id="NameEnglish"  class="form-control form-control-lg"  />
     </div>
-    <br /><br />
-    <div>
-        <label for="NameAr">Name Arabic : </label>
-        <input type="text" name="NameAr" id="NameAr"/>
-    </div><br /><br />
-    <div>
-        <label for="Email">Email : </label>
-        <input type="text" name="Email" id="Email"/>
-    </div><br /><br />
-    <div>
-        <label for="PasswordHash">Password : </label>
-        <input type="text" name="Password" id="PasswordHash"/>
-    </div><br /><br />
-    <div>
-        <label for="Country">Country : </label>
-        <input type="text" name="Country" id="Country"/>
-    </div><br /><br />
-    <div>
-        <label for="City">City : </label>
-        <input type="text" name="City" id="City"/>
-    </div><br /><br />
-    <div>
-        <label for="Street">Street : </label>
-        <input type="text" name="Street" id="Street"/>
-    </div><br /><br />
-    <div>
-        <label for="uploadedimg">Image : </label>
-        <input type="file" name="uploadedimg" id="uploadedimg"/>
-    </div><br /><br />
+
+                <div class="form-outline mb-2">
+                   <label for="NameAr">Name Arabic  </label>
+                    <input type="text" name="NameAr" class="form-control form-control-lg" id="NameAr"/>
+                </div>
+
+                <div class="form-outline mb-2">
+                 <label for="Email">Email  </label>
+                       <input type="text" name="Email" class="form-control form-control-lg" id="Email"/>
+                </div>
+
+                <div class="form-outline mb-2">
+               <label for="PasswordHash">Password  </label>
+                 <input type="password" name="Password" class="form-control form-control-lg" id="PasswordHash"/>
+                </div>
+
+               
+                <div class="form-outline mb-2">
+               <label for="Country">Country  </label>
+                <input type="text" name="Country"  class="form-control form-control-lg" id="Country"/>
+                </div>
+                
+                <div class="form-outline mb-2">
+               <label for="City">City  </label>
+                <input type="text" name="City"  class="form-control form-control-lg" id="City"/>
+                </div>
+                
+                <div class="form-outline mb-2">
+               <label for="Street">Street  </label>
+                <input type="text" name="Street"  class="form-control form-control-lg" id="Street"/>
+                </div>
 
 
-    <div>
-        <label >
- @ViewBag.Roles </label>
-        <input type="text" name="Role" value="@ViewBag.Roles" hidden readonly />
-    </div><br /><br />
+                 <div class="form-outline mb-2">
+               <label for="Phones">Phones  </label>
+                <input type="text" name="Phones"  class="form-control form-control-lg" id="Phones"/>
+                </div>
+               
+                  <input type="text" name="Role" value="@ViewBag.Roles" hidden readonly />
+                  <div class="form-outline mb-2">
+        <label for="uploadedimg">Image  </label>
+        <input type="file" name="uploadedimg"  class="form-control form-control-lg" id="uploadedimg"/>
+    </div>
+               
+                 
+                 <div class="d-flex justify-content-center">
+                 <input type="submit"  class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" value="Reagister"  />
+                   </div>
+                <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="~/SignInMvc"
+                    class="fw-bold text-body"><u>Login here</u></a></p>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
-    <div>
-        <label for="Phones">Phone : </label>
-        <input type="text" name="Phones" id="Phones"/>
-    </div><br /><br />
-        <input type="submit" value="Create"/>
-</form>
-
-
+</body>

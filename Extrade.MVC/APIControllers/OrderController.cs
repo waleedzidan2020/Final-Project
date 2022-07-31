@@ -55,7 +55,7 @@ namespace Extrade.MVC.Controler
             
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var order = repo.GetOne(ID);
-            var result = detailsrepo.GetList().Where(p => p.OrderId == order.ID);
+            var result = detailsrepo.GetList().Where(p => p.OrderID == order.ID);
 
             return new APIViewModel
             {

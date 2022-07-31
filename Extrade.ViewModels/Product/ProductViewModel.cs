@@ -34,6 +34,11 @@ namespace Extrade.ViewModels
                  
              };
         }
+
+
+
+       
+        
     }
     
     public class ProductViewModel

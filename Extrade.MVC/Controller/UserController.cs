@@ -114,10 +114,11 @@ namespace Extrade.MVC
          
         }
         [HttpGet]
+       [Route("Mvc/SignOut")]
         public new async Task<IActionResult> SignOut()
         {
             await UserRep.SignOut();
-            return null;
+            return View("SignIn");
         }
         [Route("Register")]
         public IActionResult Register()

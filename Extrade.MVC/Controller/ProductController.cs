@@ -163,8 +163,10 @@ namespace Extrade.MVC
                     f.CopyTo(fs);
                     fs.Position = 0;
                 }
-                model.Price *= (10f / 100f);
-                model.CategoryID = 1;
+            float discont = model.Price;
+          discont = discont * (10f / 100f);
+            model.Price += discont;
+            model.CategoryID = 1;
                 ProductRep.Add(model.ToModel());
                 unitOfWork.Submit();
                 return RedirectToAction("VendorGet");
@@ -172,40 +174,46 @@ namespace Extrade.MVC
             //else return RedirectToAction("VendorGet");
         }
         [HttpGet]
-        public APIViewModel Update(int id)
+        public IActionResult Update(int id)
         {
-           var result= ProductRep.GetProductByID(id);
-            return new APIViewModel
-            {
-                Success = true,
-                Massege = "",
-                Data = result
-            };
+           var result= ProductRep.GetProduct(id);
+            ViewBag.id = result.VendorID;
+            return View(result);
         }
         [HttpPost]
-        public APIViewModel Update(ProductEditViewModel obj)
+        public IActionResult Update(ProductEditViewModel obj)
         {
             string Upload = "/Content/Uploads/ProductImage/";
             obj.Images = new List<string>();
-            foreach (IFormFile f in obj.uploadedimg)
+            if (obj.uploadedimg != null)
             {
-                string NewFileName = Guid.NewGuid().ToString() + f.FileName;
-                obj.Images.Add(Upload + NewFileName);
-                FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
-                ), FileMode.Create);
-                f.CopyTo(fs);
-                fs.Position = 0;
+                foreach (IFormFile f in obj.uploadedimg)
+                {
+                    string NewFileName = Guid.NewGuid().ToString() + f.FileName;
+                    obj.Images.Add(Upload + NewFileName);
+                    FileStream fs = new FileStream(Path.Combine(
+                    Directory.GetCurrentDirectory(), "Content", "Uploads", "ProductImage", NewFileName
+                    ), FileMode.Create);
+                    f.CopyTo(fs);
+                    fs.Position = 0;
+                }
             }
+            obj.CategoryID = 1;
             ProductRep.Update(obj.ToModel());
             unitOfWork.Submit();
-            return new APIViewModel
-            {
-                 Success=true,
-                 Massege="",
-                 Data=null
-            };
+            return RedirectToAction("VendorGet");
         }
+        [Authorize(Roles = "Vendor")]
+        public IActionResult DeleteVendor(int ID)
+        {
+            ProductRep.Delete(ID);
+            unitOfWork.Submit();
+            return RedirectToAction("VendorGet");
+        }
+
+
+
+        [Authorize(Roles ="Admin")]
         public IActionResult Delete(int ID)
         {
             ProductRep.Delete(ID);
