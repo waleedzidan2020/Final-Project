@@ -109,9 +109,11 @@ namespace Extrade.Repositories
                     NameEn = p.NameEn,
                     NameAr = p.NameAr,
                     Price = p.Price,
+                    Quantity=p.Quantity,
                     Description = p.Description,
                     Category = p.Category.NameEn,
                     VendorName = p.Vendor.User.NameEn,
+                    Status=p.Status,
                     IsDeleted = p.IsDeleted,
                     VendorID=p.Vendor.UserID
                     
@@ -122,7 +124,8 @@ namespace Extrade.Repositories
             return  Result.ToList();
         }
         public PaginingViewModel<List<ProductViewModel>> GetProductForUsers(
-                        int categoryID,
+                        int categoryID=0,
+                        string vendorID="",
                         string? NameEn = null,
                         string? NameAr = null,
                         float Price = 0,
@@ -136,23 +139,32 @@ namespace Extrade.Repositories
         {
             var Filtering = PredicateBuilder.New<Product>();
             var oldFiltering = Filtering;
-           
+
+            if (!string.IsNullOrEmpty(vendorID))
+                Filtering = Filtering.Or(p => p.VendorID == vendorID);
             if (!string.IsNullOrEmpty(NameEn))
                 Filtering = Filtering.Or(p => p.NameEn.Contains(NameEn));
             if (!string.IsNullOrEmpty(NameAr))
                 Filtering = Filtering.Or(p => p.NameAr.Contains(NameAr));
             if (Price > 0)
                 Filtering = Filtering.Or(p => p.Price == Price);
-            if (CategoryName != null)
-                Filtering = Filtering.Or(p => p.Category.NameEn.Contains(CategoryName));
+            if (categoryID > 0)
+                Filtering = Filtering.Or(p => p.CategoryID == categoryID);
+            if (!string.IsNullOrEmpty(CategoryName))
+                Filtering = Filtering.Or(p => p.Category.NameEn.Contains(CategoryName)|| p.Category.NameAr.Contains(CategoryName));
             if (ModifiedDate != null)
                 Filtering = Filtering.Or(p => p.ModifiedDate <= ModifiedDate.Value);
+
             if (oldFiltering == Filtering)
                 Filtering = null;
-            var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, "Category", "Vendor", "Ratings");
+
+            var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, "Category", "Vendor", "Ratings", "ProductImages");
 
             var Result =
-                query.Select(p => new ProductViewModel()
+                query
+                .Where(p => p.Status == extrade.models.ProductStatus.accepted
+                  && p.IsDeleted == false && p.Quantity > 0)
+                .Select(p => new ProductViewModel()
                 {
                     ID = p.ID,
                     NameEn = p.NameEn,
@@ -160,9 +172,13 @@ namespace Extrade.Repositories
                     Description = p.Description,
                     Category = (p.Category != null)?p.Category.NameEn:"not provided",
                     VendorName = (p.Vendor != null)?p.Vendor.User.NameEn : "not provided",
-                    Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average():0
-                }).Where(p => p.Status == extrade.models.ProductStatus.accepted 
-                && p.IsDeleted == false && p.Quantity>0 && p.CategoryID==categoryID);
+                    CategoryID = p.CategoryID,
+                    Price = p.Price,
+                    Quantity = p.Quantity,
+                    VendorID=p.VendorID,
+                    //Images = (p.ProductImages != null)?p.ProductImages.Select(p=>p.image).ToList():new List<string> { "notProvide.jpg"},
+                    //Rating = (p.Ratings != null)? p.Ratings.Select(p => p.Value).Average():0
+                });
 
             PaginingViewModel<List<ProductViewModel>>
                 FinalResult = new PaginingViewModel<List<ProductViewModel>>()
@@ -208,6 +224,16 @@ namespace Extrade.Repositories
 
             var query = base.GetByID(filter);
             return query.ToViewModel();
+        }
+        public Product GetProductModelByID(int ID)
+        {
+            var filter = PredicateBuilder.New<Product>();
+            var old = filter;
+            if (ID > 0)
+                filter = filter.Or(p => p.ID == ID);
+
+            var query = base.GetByID(filter);
+            return query;
         }
 
         public ProductEditViewModel GetProduct(int ID)

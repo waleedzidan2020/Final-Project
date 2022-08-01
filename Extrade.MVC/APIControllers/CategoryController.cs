@@ -25,7 +25,7 @@ namespace Extrade.MVC.Controler
         }
         
 
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         [Route("Api/GetCaterory")]
         public  APIViewModel Get(int _ID = 0, string NameAr = "", string NameEn = "", string orderby = null,
             bool IsAsceding = false, int pageindex = 1, int pagesize = 20)

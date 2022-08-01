@@ -16,7 +16,7 @@ namespace Extrade.Repositories
         }
 
         public PaginingViewModel<List<FavouriteViewModel>> GetFavourites(
-                        string UserID, 
+                        string UserID = "", 
                         int ID = 0,
                         string OrderBy = "",
                         bool IsAscending = false,
@@ -28,7 +28,9 @@ namespace Extrade.Repositories
                 var oldFiltering = Filtering;
                 if (ID > 0)
                     Filtering = Filtering.Or(p => p.ID == ID);
-                if (oldFiltering == Filtering)
+            if (!string.IsNullOrEmpty(UserID))
+                Filtering = Filtering.Or(p => p.UserID == UserID);
+            if (oldFiltering == Filtering)
                     Filtering = null;
                 var query = Get(Filtering, OrderBy, IsAscending, PageIndex, PageSize, null);
 
@@ -37,7 +39,13 @@ namespace Extrade.Repositories
                     {
                         ID = p.ID,
                         ProductID=p.ProductID,
-                        UserID=p.UserID
+                        NameEn=p.Product.NameEn,
+                        NameAr=p.Product.NameAr,
+                        image=p.Product.ProductImages.FirstOrDefault().image??"",
+                        Description=p.Product.Description,
+                        Price=p.Product.Price,
+                        
+                        UserID =p.UserID
                     }).Where(p=>p.UserID==UserID);
 
                 PaginingViewModel<List<FavouriteViewModel>>
@@ -53,13 +61,26 @@ namespace Extrade.Repositories
 
             
         }
-        public new Favourite Add(Favourite obj) {
-            var query = base.GetList().Select(p => new Favourite
+        public FavouriteViewModel Add(FavouriteViewModel obj)
+        {
+            var added = new Favourite
             {
+                ID = obj.ID,
                 ProductID = obj.ProductID,
                 UserID = obj.UserID
-            }).Where(f => f.ProductID == obj.ProductID && f.UserID == obj.UserID);
-            if (query == null)
+            };
+
+            var add= base.Add(added).Entity;
+            return new FavouriteViewModel
+            {
+                ID = add.ID,
+                ProductID = add.ProductID,
+                UserID = add.UserID
+            };
+        }
+        public new Favourite Add(Favourite obj) {
+            var query = base.GetList().Where(f => f.ProductID == obj.ProductID && f.UserID == obj.UserID);
+            if (query.Count() <= 0)
             {
                 return base.Add(obj).Entity;
             }

@@ -47,25 +47,47 @@ namespace Extrade.ViewModels
         //{
         //    return ((c.Parent != null && c.Parent == parent) || (c.Parent != null ? c.Parent.IsChildOf(parent) : false));
         //}
-        public static User ChangeUserToUserControllersViewModel(this UserControllersViewModel obj) =>
-            new User
+        public static UserControllersViewModel ChangeUserToUserControllersViewModel(this UserViewModel obj) =>
+            new UserControllersViewModel
             {
                 
                 NameEn=obj.NameEn,
                 NameAr = obj.NameAr,
-                PasswordHash = obj.Password,
+                Password = obj.Password,
                 UserName = obj.Email,
                 Email = obj.Email,
                 Country = obj.Country,
                 City = obj.City,
                 Street = obj.Street,
                 IsDeleted=obj.IsDeleted,
-                PhoneNumber = obj.Phones.Select(p=> new Phone {
-                    Number=p
-                }).ToList(),
+               
                 Img = obj.Img,
                 
+                
             };
+
+
+
+        public static User ChangeUserToUserControllersViewModel(this UserControllersViewModel obj) =>
+          new User
+          {
+
+              NameEn = obj.NameEn,
+              NameAr = obj.NameAr,
+              PasswordHash = obj.Password,
+              UserName = obj.Email,
+              Email = obj.Email,
+              Country = obj.Country,
+              City = obj.City,
+              Street = obj.Street,
+              IsDeleted = obj.IsDeleted,
+              PhoneNumber = obj.Phones.Select(p => new Phone
+              {
+                  Number = p
+              }).ToList(),
+              Img = obj.Img,
+
+          };
         public static UserControllersViewModel UserToEdit(this User obj) =>
             new UserControllersViewModel
             {

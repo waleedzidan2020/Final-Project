@@ -72,7 +72,18 @@
             
           </div>
 
+          <div>
+               <label class="form-label" for="">Category</label>
+          <select class="form-select" name="CategoryID" aria-label="Default select example">
+         <option selected>choose Category</option>
+        
+      @foreach(var i in ViewBag.list){
+        <option value="@i.CatID"   >   @i.NameEn     </option>
+      }
 
+ 
+</select>
+   </div>
             <div class="form-outline mb-4">
               <label class="form-label" for="form3Example3">Price</label>
             <input type="number" name="Price" id="form3Example3" class="form-control form-control-lg"

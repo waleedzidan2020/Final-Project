@@ -12,13 +12,15 @@ namespace Extrade.MVC
         private readonly ProductRepository ProductRep;
         private readonly VendorRepository VendorRep;
         private readonly UnitOfWork unitOfWork;
+        private readonly CategoryRepository categoryrepo;
 
 
-        public ProductController(VendorRepository Vendorrepo,ProductRepository ProductRep, UnitOfWork unitOfWork)
+        public ProductController(VendorRepository Vendorrepo,ProductRepository ProductRep, UnitOfWork unitOfWork, CategoryRepository categoryrepo)
         {
             VendorRep=Vendorrepo;
             this.ProductRep= ProductRep;
             this.unitOfWork = unitOfWork;
+            this.categoryrepo = categoryrepo;
         }
         //[Authorize("Admin")]
         [Route("ProductMvc/Get")]
@@ -141,6 +143,12 @@ namespace Extrade.MVC
      
         public IActionResult Add() //edit ui 
         {
+                
+                var cat= categoryrepo.Get();
+
+            ViewBag.list = cat.Data;
+            
+
             return View();
         }
         [HttpPost]
@@ -166,7 +174,7 @@ namespace Extrade.MVC
             float discont = model.Price;
           discont = discont * (10f / 100f);
             model.Price += discont;
-            model.CategoryID = 1;
+            model.Status = ProductStatus.pending;
                 ProductRep.Add(model.ToModel());
                 unitOfWork.Submit();
                 return RedirectToAction("VendorGet");
@@ -222,9 +230,9 @@ namespace Extrade.MVC
         }
         public IActionResult AcceptProduct(int ID)
         {
-            ProductRep.ProductStatus(ID);
+            var x = ProductRep.ProductStatus(ID);
             unitOfWork.Submit();
-            return RedirectToAction();
+            return RedirectToAction("Get");
         }
         //public IActionResult RejectProduct(int ID)
         //{

@@ -36,7 +36,7 @@ namespace Extrade.ViewModels
     public class OrderEditViewModel
     {
         public int ID { get; set; }
-        public int DriverID { get; set; }
+        public int? DriverID { get; set; }
         public string? UserID { get; set; }
         public OrderStatus status { get; set; }
         public float TotalPrice { get; set; }

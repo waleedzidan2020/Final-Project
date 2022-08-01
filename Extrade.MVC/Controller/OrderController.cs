@@ -42,13 +42,25 @@ namespace Extrade.MVC
             UnitOfWork.Submit();
 
         }
+
+
+        public IActionResult EditOrderStatus(int id ) {
+
+          var s =  repo.EditOrderStatus(id);
+            var x = s.status;
+            UnitOfWork.Submit();
+        return    RedirectToAction("GetOrderDetails");
+        }
+      
+
          [HttpGet]
 
         [Route("Mvc/GetOrderDetails")]
-        public IActionResult GetOrderDetails()
+        public IActionResult GetOrderDetails( )
         {
             ViewBag.userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var data = repos.GetListForOrderDetails();
+        
             return View(data);
 
 

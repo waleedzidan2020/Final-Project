@@ -17,7 +17,9 @@ namespace Extrade.ViewModels
             {
                 TaxCard = model.TaxCard,
                 Salary = model.Salary,
-                IsDeleted = model.IsDeleted
+                IsDeleted = model.IsDeleted,
+                Status = model.MarketerStatus,
+                UserID = model.UserID,
 
 
 

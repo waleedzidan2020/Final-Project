@@ -13,5 +13,13 @@ namespace Extrade.ViewModels
         public int ID { get; set; }
         public string? UserID { get; set; }
         public int ProductID { get; set; }
+        public string NameEn { get; set; }
+        public  string NameAr { get; set; }
+        public  string Description { get; set; }
+        public float Price  { get; set; }
+        public string image { get; set; } = string.Empty;
+
+
+ 
     }
 }

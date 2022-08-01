@@ -15,11 +15,14 @@ namespace Extrade.MVC.Controler
         private readonly CartRepository Cartrepo;
         private readonly OrderDetailsRepositoty detailsrepo;
         private readonly UserRepository UserRepo;
+        private readonly ProductRepository ProdRepo;
+
 
         private readonly UnitOfWork UnitOfWork;
 
 
-        public OrderController(OrderRepository repo
+        public OrderController(ProductRepository _prorep,
+            OrderRepository repo
             , CartRepository _Cartrepo
             , MarketerRebository _MarketerRebository
             , UnitOfWork UnitOfWork
@@ -28,6 +31,7 @@ namespace Extrade.MVC.Controler
             , OrderDetailsRepositoty _ord
             , CollectionDetailsRepository collectionDetailsRepository)
         {
+            ProdRepo= _prorep;
             UserRepo = user;
             this.repo = repo;
             detailsrepo = _ord;
@@ -65,37 +69,97 @@ namespace Extrade.MVC.Controler
             };
         }
         [HttpPost]
+        public APIViewModel AddApi([FromBody] OrderEditViewModel order)
+        {
+            try
+            {
+                order.DriverID = 0;
+                var Insert = repo.Add(order);
+                UnitOfWork.Submit();
+                var lastOrder = repo.GetlastOrder(order.UserID,OrderStatus.pending, 0, "ID", false);
+                var odlist = new List<OrderDetailsEditViewModel>();
+                var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
+                foreach (var i in carts)
+                {
+                    var prod = ProdRepo.GetProductByID(i.ProductID);
+                    var oneod = new OrderDetailsEditViewModel()
+                    {
+                        OrderID = lastOrder.ID,
+                        ProductID = prod.ID,
+                        ProductQuantity = i.Quantity,
+                        SubPrice = prod.Price * i.Quantity,
+                    };
+                    odlist.Add(oneod);
+                }
+
+                var orderdetails = detailsrepo.Add(odlist);
+                UnitOfWork.Submit();
+                return new APIViewModel
+                {
+                    Massege = "added",
+                    Success = true,
+                    Data = null,
+                };
+            }catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Massege = "Error",
+                    Success = false,
+                    Data = null,
+                };
+            }
+
+        }
+        [HttpPost]
         public IActionResult Add(OrderEditViewModel order)
         {
-            var LoginAccount = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            order.UserID = LoginAccount;
-            var carts = Cartrepo.GetList().Where(i => i.UserID == LoginAccount).ToList();
-
-            if (order.CollectionCode != null)
+            //var LoginAccount = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //order.UserID = LoginAccount;
+            Random rand = new Random();
+            order.DriverID = rand.Next(1,3);
+            var Insert = repo.Add(order);
+            var odlist = new List<OrderDetailsEditViewModel>();
+            var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
+            foreach(var i in carts)
             {
-                var query = Collectionrepo.GetList().Where(p => p.Code == order.CollectionCode).FirstOrDefault();
-                var coldetails = Coldetailsrepo.GetList().Where(c => c.CollectionID == query.ID);
-                var checkingresult = repo.CheckingList(coldetails.ToList(), carts);
-                if (checkingresult.Count >= 0)
+                var prod = ProdRepo.GetProductByID(i.ProductID);
+                var oneod = new OrderDetailsEditViewModel()
                 {
-                    var Insertsalary = repo.Add(order);
+                    OrderID = Insert.ID,
+                    ProductID = prod.ID,
+                    ProductQuantity = i.Quantity,
+                    SubPrice = prod.Price*i.Quantity,
+                    
+                };
+                odlist.Add(oneod);
+            }
 
+            var orderdetails = detailsrepo.Add(odlist); 
+            UnitOfWork.Submit();
+            return RedirectToAction("Add", "OrderDetails", Insert);
+            
+            
+        }
+
+        public IActionResult AddFromCollection(OrderEditViewModel order)
+        {
+            
+            var colID = Collectionrepo.GetOneByCode(order.CollectionCode);
+                Coldetailsrepo.GetList().Where(p=>p.CollectionID == colID.ID).ToList();
+                var query = Collectionrepo.GetList().Where(p => p.Code == order.CollectionCode)
+                    .FirstOrDefault();
+                var coldetails = Coldetailsrepo.GetList().Where(c => c.CollectionID == query.ID).ToList();
+                var Insertsalary = repo.Add(order);
+                UnitOfWork.Submit();
+                var orderdetails = detailsrepo.AddForCollection(coldetails,Insertsalary);
+            
                     var marketer = MarketerRebository.GetOne(query.MarketerID);
                     marketer.Salary += Insertsalary.TotalPrice * (5 / 100);
                     MarketerRebository.UpdateSalary(marketer);
                     UnitOfWork.Submit();
                     return RedirectToAction("Add", "OrderDetails", Insertsalary);
-                }
-            }
-            else { 
-            var Insert = repo.Add(order);
-            UnitOfWork.Submit();
-            return RedirectToAction("Add", "OrderDetails", Insert);
-            }
-            return null;
-        }
-        
-       
+        }       
         //[HttpGet]
         //public APIViewModel Update(int ID)
         //{

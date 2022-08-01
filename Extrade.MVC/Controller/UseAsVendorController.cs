@@ -59,27 +59,41 @@ namespace Extrade.MVC
         }
 
 
-
+        [HttpGet]
+        [Route("/Vendor/Edit")]
+        public IActionResult edit()
+        {
+            var userinfo = UserRep.GetByID(User.FindFirstValue(ClaimTypes.NameIdentifier));
+           var result= userinfo.ChangeUserToUserControllersViewModel();
+        
+            return View(result);
+        }
+        [HttpPost]
+        [Route("/Vendor/Edit")]
         public async Task<IActionResult> edit(UserControllersViewModel obj)
         {
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            obj.ID = userid;
             string Uploade = "/Content/Uploads/UserImage/";
 
             IFormFile s = obj.uploadedimg;
 
+            if (obj.uploadedimg != null)
+            {
+                string NewFileName = Guid.NewGuid().ToString() + s.FileName;
+                obj.Img = Uploade + NewFileName;
 
-            string NewFileName = Guid.NewGuid().ToString() + s.FileName;
-            obj.Img = Uploade + NewFileName;
 
+                FileStream fs = new FileStream(Path.Combine(
+                    Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
+                    ), FileMode.Create);
 
-            FileStream fs = new FileStream(Path.Combine(
-                Directory.GetCurrentDirectory(), "Content", "Uploads", "UserImage", NewFileName
-                ), FileMode.Create);
-
-            s.CopyTo(fs);
-            fs.Position = 0;
+                s.CopyTo(fs);
+                fs.Position = 0;
+            }
             await UserRep.Update(obj);
             unit.Submit();
-            return RedirectToAction("AllUsers");
+            return RedirectToAction("VendorGet","Product");
         }
 
 

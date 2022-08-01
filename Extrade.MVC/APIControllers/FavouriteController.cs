@@ -10,14 +10,17 @@ namespace Extrade.MVC.APIControllers
     {
         private readonly UnitOfWork unitOfWork;
         private readonly FavouriteRepository FavRepo;
-        public FavouriteController(UnitOfWork _unitOfWork,FavouriteRepository _FavRepo)
+        private readonly ProductRepository productRepo;
+        public FavouriteController(UnitOfWork _unitOfWork,FavouriteRepository _FavRepo, ProductRepository productrepo)
         {
             unitOfWork = _unitOfWork;
             FavRepo = _FavRepo;
+            productRepo = productrepo;
         }
 
 
         public APIViewModel Get(
+                        string UserID = "",
                         int ID = 0,
                         string OrderBy = "",
                         bool IsAscending = false,
@@ -25,11 +28,7 @@ namespace Extrade.MVC.APIControllers
                         int PageSize = 20
             )
         {
-            string LoginUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = FavRepo.GetFavourites(LoginUser, ID = 0, OrderBy = "",
-                        IsAscending = false,
-                        PageIndex = 1,
-                        PageSize = 20);
+            var result = FavRepo.GetFavourites(UserID, ID, OrderBy,IsAscending,PageIndex,PageSize);
             
             return new APIViewModel
             {
@@ -39,10 +38,9 @@ namespace Extrade.MVC.APIControllers
             };
         }
         [HttpPost]
-        public APIViewModel Add(Favourite obj)
+        public APIViewModel Add([FromBody] Favourite fav)
         {
-            obj.UserID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            FavRepo.Add(obj);
+            FavRepo.Add(fav);
             unitOfWork.Submit();
             return new APIViewModel
             {
@@ -51,16 +49,18 @@ namespace Extrade.MVC.APIControllers
                 Data = null
             };
         }
-        //public APIViewModel Remove(int ID)
-        //{
-        //    FavRepo.Remove(ID);
-        //    unitOfWork.Submit();
-        //    return new APIViewModel
-        //    {
-        //        Success = true,
-        //        Massege = "",
-        //        Data = null
-        //    };
-        //}
+        [HttpPost]
+        public APIViewModel Remove(int ID)
+        {
+
+            FavRepo.Remove(ID);
+            unitOfWork.Submit();
+            return new APIViewModel
+            {
+                Success = true,
+                Massege = "",
+                Data = null
+            };
+        }
     }
 }

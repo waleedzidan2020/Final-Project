@@ -61,7 +61,35 @@ namespace Extrade.Repositories
             return final;
 
         }
+        public OrderViewModel GetlastOrder(string UserID = "",OrderStatus status = OrderStatus.pending, float TotalPrice = 0, string orderby = "ID", bool IsAsceding = false)
+        {
 
+            var filterd = PredicateBuilder.New<Order>();
+            var old = filterd;
+
+            if (!string.IsNullOrEmpty(UserID))
+                filterd = filterd.Or(i => i.UserID == UserID);
+            if (status != OrderStatus.pending)
+                filterd = filterd.Or(i => i.OrderStatus == status);
+
+            if (TotalPrice > 0)
+                filterd = filterd.Or(p => p.TotalPrice == TotalPrice);
+
+            if (old == filterd)
+                filterd = null;
+
+            var query = base.Get(filterd, orderby, IsAsceding, 1, 20, null);
+            var res = query.Select(p => new OrderViewModel()
+            {
+                ID = p.ID,
+                OrderDetails = p.OrderDetails.Select(p => p.Quantity).ToList(),
+                TotalPrice = p.TotalPrice,
+                status = p.OrderStatus,
+            }).FirstOrDefault();
+
+            return res;
+
+        }
 
         public Order GetOrderByID(int ID)
         {
@@ -112,6 +140,19 @@ namespace Extrade.Repositories
             };
             return result;
         }
+        //public List<int> GettingFromCollectionDetails(List<CollectionDetails> collections)
+        //{
+        //    var AllCollectionDetails = new List<CollectionDetails>();
+        //    for(var i = 0; i < collections.Count; i++)
+        //    {
+                
+        //    }
+                
+        //    result.Add(collections[i].ProductID);
+                    
+            
+        //    return result;
+        //}
         public OrderViewModel Remove(int ID)
         {
             var filter = PredicateBuilder.New<Order>();
@@ -131,6 +172,25 @@ namespace Extrade.Repositories
             }
             else res.IsDeleted = false;
             return res.ToViewModel();
+        }
+
+
+
+        public OrderViewModel EditOrderStatus(int ID)
+        {
+            var filter = PredicateBuilder.New<Order>();
+            filter = filter.Or(p => p.ID == ID);
+            var query = GetbyID(filter);
+            if (query.OrderStatus == extrade.models.OrderStatus.pending)
+            {
+                query.OrderStatus = extrade.models.OrderStatus.accepted;
+            }
+            else if (query.OrderStatus == extrade.models.OrderStatus.rejected)
+                query.OrderStatus = extrade.models.OrderStatus.accepted;
+
+            else if (query.OrderStatus == extrade.models.OrderStatus.accepted)
+                query.OrderStatus = extrade.models.OrderStatus.rejected;
+            return base.Update(query).Entity.ToViewModel();
         }
 
 

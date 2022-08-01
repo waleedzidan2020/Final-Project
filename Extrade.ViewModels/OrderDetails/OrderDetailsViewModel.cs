@@ -38,6 +38,7 @@ namespace Extrade.ViewModels
         public float SubPrice { get; set; }
         public int ProductQuantity { get; set; }
        public ICollection<Phone> PhoneNumber { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
         public float TotalPrice { get; set; }
         public Product product { get; set; }

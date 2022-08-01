@@ -37,7 +37,7 @@
                                     
       @foreach (var p in Model)
                     {
-                       if(p.IsDeleted==false){
+                       if(p.IsDeleted==false && p.Status==@extrade.models.ProductStatus.accepted){
                         <tr>
                             <td>@p.NameEn</td>
                             <td>@p.NameAr</td>
