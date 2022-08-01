@@ -155,9 +155,7 @@ namespace Extrade.Repositories
                     //vendor.Balance += (od.SubPrice * (10 / 100));
                     Vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
                     var VendorBalance = VendorRepository.Update(Vendor).Entity;
-                    var product = ProdRepo.GetProductModelByID(OrderDetails[i].ProductID);
-                product.Quantity -= OrderDetails[i].ProductQuantity;
-                var updatequantity = ProdRepo.Update(product).Entity;
+                    
                     Paymentacc.Balance += od.SubPrice - ((95 / 100) * od.SubPrice);
                     var payment = PaymentRepo.Add(Paymentacc).Entity;
 
