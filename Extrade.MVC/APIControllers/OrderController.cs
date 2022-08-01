@@ -90,15 +90,17 @@ namespace Extrade.MVC.Controler
                         SubPrice = prod.Price * i.Quantity,
                     };
                     odlist.Add(oneod);
+                    Cartrepo.Remove(i);
                 }
 
                 var orderdetails = detailsrepo.Add(odlist);
                 UnitOfWork.Submit();
+
                 return new APIViewModel
                 {
                     Massege = "added",
                     Success = true,
-                    Data = null,
+                    Data = Insert.ID,
                 };
             }catch(Exception e)
             {
@@ -119,6 +121,7 @@ namespace Extrade.MVC.Controler
             Random rand = new Random();
             order.DriverID = rand.Next(1,3);
             var Insert = repo.Add(order);
+            UnitOfWork.Submit();
             var odlist = new List<OrderDetailsEditViewModel>();
             var carts = Cartrepo.GetList().Where(i => i.UserID == order.UserID).ToList();
             foreach(var i in carts)

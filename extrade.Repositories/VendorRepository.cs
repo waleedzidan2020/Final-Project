@@ -118,12 +118,12 @@ namespace Extrade.Repositories
        
 
 
-        public string GetVendorbyProductID(int ID)
+        public Vendor GetVendorbyProductID(int ID)
         {
             var Filter = PredicateBuilder.New<Product>();
             Filter = Filter.Or(p => p.ID == ID);
             var result = ProductRepo.GetbyID(Filter);
-            return result.VendorID;
+            return result.Vendor;
 
         }
         public VendorViewModel GetOne(string _id = "")
@@ -152,6 +152,10 @@ namespace Extrade.Repositories
            
 
 
+        }
+        public void UpdateBalance (Vendor vendor)
+        {
+            base.Update(vendor);
         }
 
         public VendorViewModel Update(VendorEditViewModel model)
