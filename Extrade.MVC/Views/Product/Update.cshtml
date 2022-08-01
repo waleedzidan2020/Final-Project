@@ -1,0 +1,124 @@
+﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@{
+    Layout = "_VendorLayout";
+
+
+}
+@using Extrade.ViewModels
+
+@model ProductEditViewModel
+
+@*<form asp-controller="Product" asp-action="Update" method="post" enctype="multipart/form-data">
+        <h1>Update Product</h1>
+    <div>
+        <label asp-for="NameEn">Name English : </label>
+        <input asp-for="NameEn" value="@Model.NameEn"/>
+    </div>
+    <br /><br />
+    <div>
+        <label asp-for="NameAr">Name Arabic : </label>
+        <input asp-for="NameAr"value="@Model.NameAr"/>
+    </div>
+    <br>
+    <div>
+        <label asp-for="Price">Price : </label>
+        <input asp-for="Price"  value="@Model.Price"/>
+    </div>
+
+     <div>
+        <label asp-for="Quantity">Quantity : </label>
+        <input asp-for="Quantity"  value="@Model.Quantity"/>
+    </div>
+     <div>
+        <label asp-for="Description">Description : </label>
+        <input asp-for="Description"  value="@Model.Description"/>
+    </div>
+    <div>
+        <label for="uploadedimg">Image : </label>
+        <input type="file" name="uploadedimg" id="uploadedimg"/>
+    </div>
+
+     <div>
+       
+        <input type="text" hidden name="VendorID" value="@ViewBag.id" id="uploadedimg"/>
+    </div>
+   
+        <input type="submit" value="Update"/>
+</form>*@
+
+
+
+
+
+
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/7023/7023100.png"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+           <h2 class="text-uppercase text-center mb-4">Edit Product</h2>
+     <form asp-controller="Product" asp-action="Update" method="post" enctype="multipart/form-data">
+         
+          
+          <div class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">NameEn</label>
+            <input type="text" name="NameEn" id="form3Example3" value="@Model.NameEn" class="form-control form-control-lg"
+               />
+            
+          </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">NameAr</label>
+            <input type="text" name="NameAr" id="form3Example3" value="@Model.NameAr" class="form-control form-control-lg"
+              />
+            
+          </div>
+
+
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">Price</label>
+            <input type="number" name="Price" id="form3Example3" value="@Model.Price" class="form-control form-control-lg"
+             />
+            
+          </div>
+
+
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">Quantity</label>
+            <input type="number" name="Quantity" id="form3Example3" value="@Model.Quantity" class="form-control form-control-lg"
+              />
+            
+          </div>
+
+
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form3Example3">Description</label>
+            <input type="text" name="Description" id="form3Example3" value="@Model.Description" class="form-control form-control-lg"
+               />
+            
+          </div>
+
+          <input type="text" hidden name="VendorID" value="@ViewBag.id" id="uploadedimg"/>
+
+           <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                    <label class="form-label" for="form3Example3c">product Images</label>
+                    <input type="file" multiple="multiple" asp-for="uploadedimg" class="form-control form-control-lg" id="exampleFormControlFile1">
+                      
+                    </div>
+                  </div>
+
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <input type="submit"  class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" value="Add Product"  />
+           
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>

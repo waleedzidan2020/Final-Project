@@ -85,7 +85,7 @@ namespace Extrade.MVC
             });
             builder.Services.ConfigureApplicationCookie(c =>
             {
-                c.AccessDeniedPath = "/Home/index";
+                c.AccessDeniedPath = "/SignInMvc";
                 c.LoginPath = "/SignInMvc";
             });
             builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>

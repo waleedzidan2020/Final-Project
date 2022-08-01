@@ -109,9 +109,11 @@ namespace Extrade.Repositories
                     NameEn = p.NameEn,
                     NameAr = p.NameAr,
                     Price = p.Price,
+                    Quantity=p.Quantity,
                     Description = p.Description,
                     Category = p.Category.NameEn,
                     VendorName = p.Vendor.User.NameEn,
+                    Status=p.Status,
                     IsDeleted = p.IsDeleted,
                     VendorID=p.Vendor.UserID
                     
@@ -233,6 +235,19 @@ namespace Extrade.Repositories
             var query = base.GetByID(filter);
             return query;
         }
+
+        public ProductEditViewModel GetProduct(int ID)
+        {
+            var filter = PredicateBuilder.New<Product>();
+            var old = filter;
+            if (ID > 0)
+                filter = filter.Or(p => p.ID == ID);
+
+            var query = base.GetByID(filter);
+            return query.ToEditModel();
+        }
+
+
         public ProductViewModel Add(ProductEditViewModel obj) =>
              base.Add(obj.ToModel()).Entity.ToViewModel();
         

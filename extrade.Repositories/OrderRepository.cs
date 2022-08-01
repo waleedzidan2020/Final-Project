@@ -175,5 +175,24 @@ namespace Extrade.Repositories
         }
 
 
+
+        public OrderViewModel EditOrderStatus(int ID)
+        {
+            var filter = PredicateBuilder.New<Order>();
+            filter = filter.Or(p => p.ID == ID);
+            var query = GetbyID(filter);
+            if (query.OrderStatus == extrade.models.OrderStatus.pending)
+            {
+                query.OrderStatus = extrade.models.OrderStatus.accepted;
+            }
+            else if (query.OrderStatus == extrade.models.OrderStatus.rejected)
+                query.OrderStatus = extrade.models.OrderStatus.accepted;
+
+            else if (query.OrderStatus == extrade.models.OrderStatus.accepted)
+                query.OrderStatus = extrade.models.OrderStatus.rejected;
+            return base.Update(query).Entity.ToViewModel();
+        }
+
+
     }
 }

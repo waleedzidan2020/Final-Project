@@ -1,0 +1,95 @@
+﻿@using Extrade.ViewModels
+
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+
+@{Layout="_VendorLayout";}
+@model UserControllersViewModel
+
+
+         <link href="~/Profile.css" rel="stylesheet" />
+<div class="container-xl px-4 mt-4">
+
+  
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4"><h2>Mr.@Model.NameEn</h2></div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <form asp-action="edit" asp-controller="UseAsVendor" method="post" enctype="multipart/form-data">
+                        <!-- Form Group (username)-->
+                        <div class="mb-3">
+                        <label class="small mb-1"  for="inputEmailAddress">Email address</label>
+                            <input class="form-control" name="Email"   id="inputEmailAddress" type="email" placeholder="Enter your email address" value="@Model.Email">
+                             <input class="form-control" name="UserName" hidden   id="inputEmailAddress" type="email" placeholder="Enter your email address" value="@Model.Email">
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                               <label for="NameAr">Name Arabic  </label>
+                    <input type="text" name="NameAr" class="form-control form-control-lg" id="NameAr"  value="@Model.NameAr"/>
+                </div>
+                          
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                               <label for="NameEn">Name English  </label>
+                    <input type="text" name="NameEn" class="form-control form-control-lg" id="NameEn"   value="@Model.NameEn"/>
+                            </div>
+                        </div>
+                        <!-- Form Row        -->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (organization name)-->
+                            <div class="col-md-6">
+                                  <label for="Country">Country  </label>
+                               <input type="text" name="Country"  class="form-control form-control-lg" value="@Model.Country" id="Country"/>
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-3">
+                                <label for="City">City  </label>
+                               <input type="text" name="City"  class="form-control form-control-lg" value="@Model.City" id="City"/>
+                            </div>
+
+                             <div class="col-md-3">
+                                 <label for="Street">Street  </label>
+                <input type="text" name="Street"  class="form-control form-control-lg" value="@Model.Street" id="Street"/>
+                            </div>
+                            </div>
+                     
+                    
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (phone number)-->
+                            <div class="col-md-6">
+                               <label for="Phones">Phones  </label>
+                                 <input type="text" name="Phones"  class="form-control form-control-lg" id="Phones"/>
+                            </div>
+                            <!-- Form Group (birthday)-->
+                            <div class="col-md-6">
+                                <label for="uploadedimg">Image  </label>
+        <input type="file" name="uploadedimg"  class="form-control form-control-lg" id="uploadedimg"/>
+                            </div>
+                        </div>
+                        <!-- Save changes button-->
+                      <input type="submit"  class="btn btn-success btn-block btn-lg text-body" value="Update"  />
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

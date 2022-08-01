@@ -24,7 +24,7 @@
                                               <th scope="col">Quantity</th>
                                               <th scope="col">VendorName</th>
                                               <th scope="col">IsDeleted</th>
-                                              <th scope="col">Edit</th>
+                                              <th scope="col">Status</th>
                                              
 
                                         </tr>
@@ -52,22 +52,25 @@
           class="btn btn-danger">Active</a>
           }   
                 </td>
-                <td><a asp-action="Update" asp-controller="Product" asp-route-Id=@user.ID >Edit</a></td>
+              @*  <td><a asp-action="Update" asp-controller="Product" asp-route-Id=@user.ID >Edit</a></td>*@
+
+         <td>
                 @if (@user.Status == @extrade.models.ProductStatus.pending)
-          {<a asp-action="AcceptProduct" asp-controller="User" 
-          asp-route-Id="@user.ID"
+          {<a asp-action="AcceptProduct" asp-controller="Product" 
+          asp-route-ID="@user.ID"
           class="btn btn-primary">Pending</a>
           }
           else if (@user.Status == @extrade.models.ProductStatus.accepted){
 
           <a asp-action="AcceptProduct" asp-controller="Product" 
-          asp-route-Id="@user.ID"
-          class="btn btn-danger">Accepted</a>
+          asp-route-ID="@user.ID"
+          class="btn btn-success">Accepted</a>
           }
           else {<a asp-action="AcceptProduct" asp-controller="Product" 
-          asp-route-Id="@user.ID"
+          asp-route-ID="@user.ID"
           class="btn btn-danger">Rejected</a>
           }   
+           </td>
     </tr>
     }
     

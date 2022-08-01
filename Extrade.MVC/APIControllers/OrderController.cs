@@ -59,7 +59,7 @@ namespace Extrade.MVC.Controler
             
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var order = repo.GetOne(ID);
-            var result = detailsrepo.GetList().Where(p => p.OrderId == order.ID);
+            var result = detailsrepo.GetList().Where(p => p.OrderID == order.ID);
 
             return new APIViewModel
             {
@@ -73,7 +73,7 @@ namespace Extrade.MVC.Controler
         {
             try
             {
-                order.DriverID = null;
+                order.DriverID = 0;
                 var Insert = repo.Add(order);
                 UnitOfWork.Submit();
                 var lastOrder = repo.GetlastOrder(order.UserID,OrderStatus.pending, 0, "ID", false);

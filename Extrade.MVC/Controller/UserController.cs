@@ -89,35 +89,61 @@ namespace Extrade.MVC
         {
        
             var user = UserRep.GetByEmails(obj.Email);
-            if (user.IsDeleted == false)
-            {
-                var result = await UserRep.SignInAsMVc(obj);
-                if (!result.Succeeded)
+            if (user != null) {
+
+
+                if (user.IsDeleted == false)
                 {
-                    ModelState.AddModelError("", "Wrong Email or Password !!");
-                }
-                else if (result.IsLockedOut)
-                {
-                    ModelState.AddModelError("", "Sorry, Please Try again Later ");
+                    var result = await UserRep.SignInAsMVc(obj);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Wrong Email or Password !!");
+                    }
+                    else if (result.IsLockedOut)
+                    {
+                        ModelState.AddModelError("", "Sorry, Please Try again Later ");
+                    }
+                    else
+                    {
+                        if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Vendor") { return RedirectToAction("Add", "Vendor"); }
+
+                        else if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "User"); }
+
+
+                    }
+
                 }
                 else
                 {
-                    if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Vendor") { return RedirectToAction("Add", "Vendor"); }
 
-                    else if (manager.GetRolesAsync(user).Result.FirstOrDefault() == "Admin") { return RedirectToAction("AllUsers", "User"); }
-
-                 
+                    ModelState.AddModelError("", "Wrong Email or Password !!");
+                    return View();
                 }
 
+
+
+
+
+
+
+
+
+
+            } else
+            {
+                ModelState.AddModelError("", "Enter Your Email And Password");
+                return View();
             }
+
             return View();
          
         }
         [HttpGet]
+       [Route("Mvc/SignOut")]
         public new async Task<IActionResult> SignOut()
         {
             await UserRep.SignOut();
-            return null;
+            return View("SignIn");
         }
         [Route("Register")]
         public IActionResult Register()

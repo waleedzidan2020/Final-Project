@@ -57,7 +57,7 @@ namespace Extrade.MVC
                 return View();
             else {
 
-                return RedirectToAction("Add", "Product");
+                return RedirectToAction("VendorGet", "Product");
             }
 
         }
@@ -81,7 +81,7 @@ namespace Extrade.MVC
             repo.Add2(model);
             unitOfWork.Submit();
 
-            return RedirectToAction("Add", "Product");
+            return RedirectToAction("VendorGet", "Product");
 
         }
 

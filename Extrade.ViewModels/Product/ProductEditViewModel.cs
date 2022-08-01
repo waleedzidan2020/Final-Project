@@ -32,6 +32,25 @@ namespace Extrade.ViewModels
 
             };
         }
+        public static ProductEditViewModel ToEditModel(this Product model)
+        {
+            return new ProductEditViewModel
+            {
+                ID = model.ID,
+                VendorID = model.VendorID,
+                NameEn = model.NameEn,
+                NameAr = model.NameAr,
+                CategoryID = model.CategoryID,
+                Description = model.Description,
+                Price = model.Price,
+                Quantity = model.Quantity,
+                Status = model.Status,
+               
+                // Category = model.Category.NameEn.ToString(),
+                //Vendor = model.VendorName.Select(i => i.User.UserName),
+
+            };
+        }
     }
     
     public class ProductEditViewModel

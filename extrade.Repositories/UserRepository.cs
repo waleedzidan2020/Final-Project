@@ -195,18 +195,21 @@ namespace Extrade.Repositories
             var filter = PredicateBuilder.New<User>();
             filter = filter.Or(p => p.Id == result.ID);
             var last = GetByID(filter);
-            last.UserName = result.UserName;
+            last.UserName = result.Email;
             last.NameEn = result.NameEn;
             last.NameAr = result.NameAr;
             last.Email = result.Email;
             last.Country = result.Country;
             last.City = result.City;
             last.Street = result.Street;
-            last.Img = result.Img;
-            last.PhoneNumber = result.Phones.Select(p =>new Phone
+            if (result.Img != null)
             {
-                Number=p
-            }).ToList();
+                last.Img = result.Img;
+            }
+            //last.PhoneNumber = result.Phones.Select(p =>new Phone
+            //{
+            //    Number=p
+            //}).ToList();
             
             return await UserManager.UpdateAsync(last);
         }
