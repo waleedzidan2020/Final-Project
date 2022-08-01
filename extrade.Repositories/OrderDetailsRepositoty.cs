@@ -113,7 +113,9 @@ namespace Extrade.Repositories
                 
                 Vendor.Balance += OrderDetails[i].SubPrice - ((10/100)*OrderDetails[i].SubPrice);
                 var VendorBalance = VendorRepository.Update(Vendor).Entity;
-         
+                var product = ProdRepo.GetProductModelByID(OrderDetails[i].ProductID);
+                product.Quantity -= OrderDetails[i].ProductQuantity;
+                var updatequantity = ProdRepo.Update(product).Entity;
                 Paymentacc.Balance += OrderDetails[i].SubPrice - ((90 / 100) * OrderDetails[i].SubPrice);
                 var payment = PaymentRepo.Add(Paymentacc).Entity;
                 //UnitOfWork.Submit();
@@ -142,7 +144,9 @@ namespace Extrade.Repositories
                     };
                     base.Add(od).Entity.ToViewModel();
                     result.Add(od);
-
+                    
+                    query.Quantity -= od.Quantity;
+                    var updatequantity = ProdRepo.Update(query).Entity;
                     var Vendor = VendorRepository.GetVendorbyProductID(query.ID);
                     var marketer = marketerRepository.GetOneByCollection(CollectionDetails[i].CollectionID);
                     order.TotalPrice += od.SubPrice;
@@ -151,7 +155,9 @@ namespace Extrade.Repositories
                     //vendor.Balance += (od.SubPrice * (10 / 100));
                     Vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
                     var VendorBalance = VendorRepository.Update(Vendor).Entity;
-
+                    var product = ProdRepo.GetProductModelByID(OrderDetails[i].ProductID);
+                product.Quantity -= OrderDetails[i].ProductQuantity;
+                var updatequantity = ProdRepo.Update(product).Entity;
                     Paymentacc.Balance += od.SubPrice - ((95 / 100) * od.SubPrice);
                     var payment = PaymentRepo.Add(Paymentacc).Entity;
 
