@@ -105,6 +105,23 @@ namespace Extrade.Repositories
             
             return base.Remove(obj.ToModel()).Entity.ToViewModel();
         }
+        public List<ProductViewModel> GetProductsByCode(string Code)
+        {
+            var collection = Collrep.GetOneByCode(Code);
+            var details = base.GetList().Where(p => p.CollectionID == collection.ID).ToList();
+            var ProductList = new List<int>();
+            foreach(var i in details)
+            {
+                ProductList.Add(i.ProductID);
+            }
+            var Products = new List<ProductViewModel>();
+            foreach(var p in ProductList)
+            {
+                var query = prodrep.GetProductByID(p);
+                Products.Add(query);
+            }
+            return Products;
+        }
         
     }
 }

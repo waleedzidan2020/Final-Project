@@ -68,7 +68,7 @@ namespace Extrade.ViewModels
         public int Quantity { get; set; }
         
         public List<string>? Images { get; set; }
-        public IFormFileCollection uploadedimg { get; set; }
+        public IFormFileCollection? uploadedimg { get; set; }
 
 
     }
