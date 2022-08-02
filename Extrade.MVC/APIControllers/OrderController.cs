@@ -144,24 +144,38 @@ namespace Extrade.MVC.Controler
             
             
         }
-
-        public IActionResult AddFromCollection(OrderEditViewModel order)
+        [HttpPost]
+        public APIViewModel AddFromCollection([FromBody]OrderEditViewModel order)
         {
-            
-            var colID = Collectionrepo.GetOneByCode(order.CollectionCode);
-                Coldetailsrepo.GetList().Where(p=>p.CollectionID == colID.ID).ToList();
+            try
+            {
+                order.DriverID = null;
+                var colID = Collectionrepo.GetOneByCode(order.CollectionCode);
+               
                 var query = Collectionrepo.GetList().Where(p => p.Code == order.CollectionCode)
                     .FirstOrDefault();
                 var coldetails = Coldetailsrepo.GetList().Where(c => c.CollectionID == query.ID).ToList();
                 var Insertsalary = repo.Add(order);
                 UnitOfWork.Submit();
                 var orderdetails = detailsrepo.AddForCollection(coldetails,Insertsalary);
-            
-                    var marketer = MarketerRebository.GetOne(query.MarketerID);
-                    marketer.Salary += Insertsalary.TotalPrice * (5 / 100);
-                    MarketerRebository.UpdateSalary(marketer);
-                    UnitOfWork.Submit();
-                    return RedirectToAction("Add", "OrderDetails", Insertsalary);
+                var marketer = MarketerRebository.GetOne(query.MarketerID);
+                marketer.Salary += Insertsalary.TotalPrice * (5 / 100);
+                MarketerRebository.UpdateSalary(marketer);
+                UnitOfWork.Submit();
+                return new APIViewModel
+                {
+                    Data = null,
+                    Success = true
+                };
+            }catch(Exception e)
+            {
+                return new APIViewModel
+                {
+                    Data = e,
+                    Success = false,
+                    Massege = e.Message
+                };
+            }
         }       
         //[HttpGet]
         //public APIViewModel Update(int ID)

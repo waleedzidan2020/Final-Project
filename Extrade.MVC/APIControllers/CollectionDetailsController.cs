@@ -92,6 +92,18 @@ namespace Extrade.MVC.Controler
             
             return RedirectToAction("GetProductWithCollection","Product", added);
         }
+        [HttpGet]
+        public APIViewModel GetByCode(string Code)
+        {
+            var reult = CollectionDetailsRepo.GetProductsByCode(Code);
+            return new APIViewModel
+            {
+                Massege = "Done",
+                Success = true,
+                Data = reult,
+
+            };
+        }
         [HttpPost]
         public APIViewModel Delete(CollectionDetalisEditViewModel obj)
         {

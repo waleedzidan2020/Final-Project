@@ -25,7 +25,7 @@ namespace Extrade.Repositories
             UserRepo = _UserRepo;
             this.CollRepo = CollRepo;
         }
-        public PaginingViewModel<List<MarketerViewModels>> Get( string _UserID = null, string _TaxCard = "",
+        public PaginingViewModel<List<MarketerViewModels>> Get( string? _UserID = null, string _TaxCard = "",
             float _Salary=0,string _CollectionNameEn = "",string _CollectionNameAr = "", 
                 bool IsDeleted = false,
                 string orderby = "ID", bool isAscending = false, int pageIndex = 1, int pageSize = 20)
@@ -86,24 +86,16 @@ namespace Extrade.Repositories
 
 
             var old = filterd;
-
             if (!string.IsNullOrEmpty(_id))
                 filterd = filterd.Or(p => p.UserID == _id);
-
-
             if (old == filterd)
                 filterd = null;
-
-
             var query = base.GetByID(filterd);
 
             if (query != null)
                 return query.ToViewModel();
             else
                 return null;
-
-
-
 
         }
 
