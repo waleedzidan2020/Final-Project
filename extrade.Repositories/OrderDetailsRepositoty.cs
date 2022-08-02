@@ -18,11 +18,13 @@ namespace Extrade.Repositories
         private readonly MarketerRebository marketerRepository;
         private readonly PaymentRepository PaymentRepo;
         private readonly ProductRepository ProdRepo;
+        private readonly UnitOfWork UnitOfWork;
         public OrderDetailsRepositoty(ProductRepository _prodRepo,
             ExtradeContext _DBContext,
             OrderRepository OrderRepository,
             VendorRepository vendorRepository,
              MarketerRebository marketerRepository,
+             UnitOfWork UnitOfWork,
             PaymentRepository _paymentRepo) : base(_DBContext)
         {
             this.marketerRepository = marketerRepository;
@@ -30,6 +32,7 @@ namespace Extrade.Repositories
             orderRepository = OrderRepository;
             VendorRepository = vendorRepository;
             PaymentRepo = _paymentRepo;
+            this.UnitOfWork = UnitOfWork;
         }
 
         public List<OrderDetailsViewModel> Get(int OrderID) { 
@@ -95,24 +98,29 @@ namespace Extrade.Repositories
 
         public List<OrderDetails> Add(List<OrderDetailsEditViewModel> OrderDetails)
         {
+            var GetOrder = orderRepository.GetOrderByID(OrderDetails[0].OrderID);
             var Paymentacc = new AllPayment();
+            var vendorspays = new List<VendorViewModel>();
             var result =new List<OrderDetails>();
             for(int i = 0; i < OrderDetails.Count; i++)
             {
-                var GetOrder = orderRepository.GetOrderByID(OrderDetails[i].OrderID);
                 base.Add(OrderDetails[i].ToModel()).Entity.ToViewModel();
-
                 result.Add(OrderDetails[i].ToModel());
-                var VendorID =VendorRepository.GetVendorbyProductID(OrderDetails[i].ProductID);
-                var vendor =VendorRepository.GetOne(VendorID);
+
                 GetOrder.TotalPrice += OrderDetails[i].SubPrice;
-                var updatingTotalPrice = orderRepository.Update(GetOrder).Entity;
-                vendor.Balance += OrderDetails[i].SubPrice - ((10/100)*OrderDetails[i].SubPrice);
-                var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
-                Paymentacc.Balance += OrderDetails[i].SubPrice - ((90 / 100) * OrderDetails[i].SubPrice);
+
+                var Vendor =VendorRepository.GetVendorbyProductID(OrderDetails[i].ProductID);
                 
+                Vendor.Balance += OrderDetails[i].SubPrice - ((10/100)*OrderDetails[i].SubPrice);
+                var VendorBalance = VendorRepository.Update(Vendor).Entity;
+                var product = ProdRepo.GetProductModelByID(OrderDetails[i].ProductID);
+                product.Quantity -= OrderDetails[i].ProductQuantity;
+                var updatequantity = ProdRepo.Update(product).Entity;
+                Paymentacc.Balance += OrderDetails[i].SubPrice - ((90 / 100) * OrderDetails[i].SubPrice);
                 var payment = PaymentRepo.Add(Paymentacc).Entity;
+                //UnitOfWork.Submit();
             };
+            var updatingTotalPrice = orderRepository.Update(GetOrder).Entity;
             return result;
         }
         public List<OrderDetails> AddForCollection(List<CollectionDetails> CollectionDetails
@@ -136,17 +144,18 @@ namespace Extrade.Repositories
                     };
                     base.Add(od).Entity.ToViewModel();
                     result.Add(od);
-
-                    var VendorID = VendorRepository.GetVendorbyProductID(query.ID);
-                    var vendor = VendorRepository.GetOne(VendorID);
+                    
+                    query.Quantity -= od.Quantity;
+                    var updatequantity = ProdRepo.Update(query).Entity;
+                    var Vendor = VendorRepository.GetVendorbyProductID(query.ID);
                     var marketer = marketerRepository.GetOneByCollection(CollectionDetails[i].CollectionID);
                     order.TotalPrice += od.SubPrice;
                     var updatingTotalPrice = orderRepository.Update(OrderModel).Entity;
 
                     //vendor.Balance += (od.SubPrice * (10 / 100));
-                    vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
-                    var VendorBalance = VendorRepository.Update(vendor.ToEditViewModel().ToModel()).Entity;
-
+                    Vendor.Balance += od.SubPrice - ((10 / 100) * od.SubPrice);
+                    var VendorBalance = VendorRepository.Update(Vendor).Entity;
+                    
                     Paymentacc.Balance += od.SubPrice - ((95 / 100) * od.SubPrice);
                     var payment = PaymentRepo.Add(Paymentacc).Entity;
 
