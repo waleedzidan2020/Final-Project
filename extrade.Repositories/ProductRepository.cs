@@ -79,7 +79,7 @@ namespace Extrade.Repositories
                         string OrderBy = "",
                         bool IsAscending = false,
                         int PageIndex = 1,
-                        int PageSize = 20
+                        int PageSize = 30
                         )
         {
             var Filtering = PredicateBuilder.New<Product>();
@@ -134,7 +134,7 @@ namespace Extrade.Repositories
                         string OrderBy = "",
                         bool IsAscending = false,
                         int PageIndex = 1,
-                        int PageSize = 20
+                        int PageSize = 30
                         )
         {
             var Filtering = PredicateBuilder.New<Product>();
@@ -236,6 +236,18 @@ namespace Extrade.Repositories
             return query;
         }
 
+
+
+        public int GetCategoryId(int ID)
+        {
+            var filter = PredicateBuilder.New<Product>();
+            var old = filter;
+            if (ID > 0)
+                filter = filter.Or(p => p.ID == ID);
+
+            var query = base.GetByID(filter);
+            return query.CategoryID;
+        }
         public ProductEditViewModel GetProduct(int ID)
         {
             var filter = PredicateBuilder.New<Product>();

@@ -40,6 +40,7 @@ namespace Extrade.MVC
         [HttpPost]
         public async Task<IActionResult> Create(UserControllersViewModel obj)
         {
+            obj.IsDeleted = true;
             string Uploade = "/Content/Uploads/UserImage/";
             IFormFile s = obj.uploadedimg;
             string NewFileName = Guid.NewGuid().ToString() + s.FileName;

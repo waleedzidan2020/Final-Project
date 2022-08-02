@@ -4,7 +4,7 @@
 
 
 @{
-    Layout = "_VendorLayout"; 
+    Layout = "_AdminLayout"; 
 }
 
   <div class="card mb-4">
@@ -23,7 +23,7 @@
                                               <th scope="col">productNameAr</th>
                                               <th scope="col">productNameEn</th>
                                               <th scope="col">TotalPrice</th>
-                                               <th scope="col">OrderStatus</th>
+                                              
                                              
                                              
 
@@ -32,7 +32,7 @@
                                     
                                     <tbody>
       @foreach(var order in Model){
-          if(order.VendorId==ViewBag.userid){
+         
     <tr>
       
       <td>@order.OrderID</td>
@@ -49,26 +49,10 @@
         <td>@order.productNameEn</td>
           <td>@order.TotalPrice</td>
          
-          <td>  
-            @if (@order.OrderStatus == @extrade.models.OrderStatus.pending)
-          {<a asp-action="EditOrderStatus" asp-controller="Order" 
-          asp-route-id="@order.OrderID"
-          class="btn btn-primary">Pending</a>
-          }
-          else if (@order.OrderStatus == @extrade.models.OrderStatus.accepted){
-
-          <a asp-action="EditOrderStatus" asp-controller="Order" 
-          asp-route-id="@order.OrderID"
-          class="btn btn-danger">Accepted</a>
-          }
-          else {<a asp-action="EditOrderStatus" asp-controller="Order" 
-          asp-route-id="@order.OrderID"
-          class="btn btn-danger">Rejected</a>
-          }   
-        </td>
+         
     
                         </tr>
-                    }
+                    
      
                 }
     
@@ -79,15 +63,6 @@
                             </div>
                         
                       </div>
-
-
-
-
-
-
-
-
-
 
 
 

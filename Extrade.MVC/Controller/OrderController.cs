@@ -65,5 +65,20 @@ namespace Extrade.MVC
 
 
         }
+
+
+
+        [HttpGet]
+
+        [Route("Mvc/GetAllOrderDetails")]
+        public IActionResult GetAllOrderDetails()
+        {
+            ViewBag.userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var data = repos.GetListForOrderDetails();
+
+            return View(data);
+
+
+        }
     }
 }

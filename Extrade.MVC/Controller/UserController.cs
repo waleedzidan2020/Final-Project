@@ -91,9 +91,8 @@ namespace Extrade.MVC
             var user = UserRep.GetByEmails(obj.Email);
             if (user != null) {
 
-
-                if (user.IsDeleted == false)
-                {
+             
+               
                     var result = await UserRep.SignInAsMVc(obj);
                     if (!result.Succeeded)
                     {
@@ -112,13 +111,6 @@ namespace Extrade.MVC
 
                     }
 
-                }
-                else
-                {
-
-                    ModelState.AddModelError("", "Wrong Email or Password !!");
-                    return View();
-                }
 
 
 

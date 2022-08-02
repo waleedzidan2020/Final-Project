@@ -1,8 +1,10 @@
 @using Extrade.ViewModels;
+@using Microsoft.AspNetCore.Identity
+@using extrade.models
 @model List<ProductViewModel>
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 
-
+@inject UserManager<User> userManager
 
 
 
@@ -10,8 +12,13 @@
 @{
     Layout = "_VendorLayout"; 
 }
+ 
 
-  <div class="card mb-4">
+<div class="card mb-4">
+
+
+     
+   
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
                                 DataTable Example
@@ -34,10 +41,13 @@
 
                                         </tr>
                                     </thead>
-                                    
-      @foreach (var p in Model)
+         @{ var user=await userManager.FindByNameAsync(User.Identity.Name);}    
+            @if (user.IsDeleted == false)
+            {
+                @foreach (var p in Model)
+                {
+                    if (p.IsDeleted == false && (p.Status == @extrade.models.ProductStatus.accepted || p.Status == @extrade.models.ProductStatus.pending))
                     {
-                       if(p.IsDeleted==false && p.Status==@extrade.models.ProductStatus.accepted){
                         <tr>
                             <td>@p.NameEn</td>
                             <td>@p.NameAr</td>
@@ -45,19 +55,23 @@
                             <td>@p.Category</td>
                             <td>@p.Description</td>
                             <td>@p.Quantity</td>
-                              <td>@p.VendorName</td>
+                            <td>@p.VendorName</td>
 
                             <td><a asp-action="DeleteVendor" asp-controller="Product" asp-route-ID="@p.ID"  class="btn btn-danger" >Delete</a></td>
-                              <td><a asp-action="Update" asp-controller="Product" asp-route-id="@p.ID"  class="btn btn-danger" >Edit</a></td>
+                            <td><a asp-action="Update" asp-controller="Product" asp-route-id="@p.ID"  class="btn btn-danger" >Edit</a></td>
 
                         </tr>
-                       }
-                    
                     }
-    
+
+                }
+            }
+
 
                                        
                                     </tbody>
                                 </table>
                             </div>
+                           
                         </div>
+
+             

@@ -191,6 +191,7 @@ namespace Extrade.MVC
         [HttpPost]
         public IActionResult Update(ProductEditViewModel obj)
         {
+            var catid = ProductRep.GetCategoryId(obj.ID);
             string Upload = "/Content/Uploads/ProductImage/";
             obj.Images = new List<string>();
             if (obj.uploadedimg != null)
@@ -206,8 +207,10 @@ namespace Extrade.MVC
                     fs.Position = 0;
                 }
             }
-            obj.CategoryID = 1;
-            ProductRep.Update(obj.ToModel());
+            obj.Status = ProductStatus.pending;
+       
+            obj.CategoryID = catid;
+            ProductRep.Update(obj);
             unitOfWork.Submit();
             return RedirectToAction("VendorGet");
         }
