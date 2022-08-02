@@ -20,7 +20,7 @@ namespace Extrade.MVC.Controler
             this.unitOfWork = unitOfWork;
             this.userRepository = userRepository;
         }
-        public APIViewModel GetOne(string _id = null)
+        public APIViewModel GetDetails(string _id = null)
         {
             var data = marketerRebository.GetOne(_id);
             return new APIViewModel
